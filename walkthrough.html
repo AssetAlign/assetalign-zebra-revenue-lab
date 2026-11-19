@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Maya's Walkthrough — AssetAlign</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f5f3;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.hidden{display:none!important}
+/* ---------- onboarding (matches assetalign-onboarding) ---------- */
+.ob{padding:24px 16px 80px}
+.wrap{max-width:520px;margin:0 auto}
+.ob-logo{font-size:15px;font-weight:600;color:#1a3a5c;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.ob-logo span{color:#c8a84b}
+.prog{display:flex;gap:4px;margin-bottom:18px}.prog i{flex:1;height:4px;border-radius:2px;background:#e3e3df}.prog i.on{background:#1a3a5c}
+.card{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,.08);padding:22px 20px}
+.card h1{font-size:20px;font-weight:600;color:#1a3a5c;margin-bottom:6px;line-height:1.25}
+.card p.sub{font-size:13.5px;color:#666;margin-bottom:16px;line-height:1.5}
+.badge{display:inline-block;font-size:11.5px;background:#eaf1f8;color:#1a3a5c;border-radius:6px;padding:4px 8px;margin-bottom:12px}
+.frow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:0.5px solid rgba(0,0,0,.08);font-size:14px}
+.frow:first-of-type{border-top:none}
+.frow .l{color:#888}.frow .v{font-weight:500;text-align:right}
+.sect{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#999;margin:14px 0 4px}
+.q{margin-bottom:16px}
+.q .ql{font-size:13.5px;font-weight:500;margin-bottom:7px;color:#1a1a1a}
+.q .qh{font-weight:400;color:#999;font-size:12px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.q-opt{padding:8px 12px;border:0.5px solid rgba(0,0,0,.14);border-radius:8px;font-size:13px;cursor:pointer;background:#fff;font-family:inherit;color:#1a1a1a}
+.q-opt:hover{border-color:#1a3a5c}
+.q-opt.sel{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+.btn-p{display:block;width:100%;padding:11px;background:#1a3a5c;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-top:14px;font-family:inherit}
+.btn-g{display:block;width:100%;padding:8px;background:none;border:none;color:#999;font-size:13px;cursor:pointer;margin-top:4px;font-family:inherit}
+.pri{display:flex;align-items:center;gap:10px;padding:11px 12px;border:0.5px solid rgba(0,0,0,.12);border-radius:8px;margin-bottom:6px;font-size:14px;background:#fff;cursor:pointer}
+.pri b{width:22px;height:22px;border-radius:50%;background:#1a3a5c;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pri.unset b{background:#ddd}
+.adv{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.adv .av{width:54px;height:54px;border-radius:50%;background:#1a3a5c;color:#c8a84b;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}
+.prep{margin-top:16px;padding-top:14px;border-top:0.5px solid rgba(0,0,0,.08)}
+.email{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,.08);padding:20px}
+.email .from{font-size:12px;color:#999;margin-bottom:12px;border-bottom:0.5px solid rgba(0,0,0,.08);padding-bottom:10px}
+/* ---------- dashboard (matches assetalign-dashboard-v2) ---------- */
+.db{font-family:'Outfit',sans-serif;background:#f5f6f8;min-height:100vh;color:#1a2d42}
+.db nav{background:#fff;border-bottom:3px solid #0D3B66;padding:0 24px;height:64px;display:flex;align-items:center;gap:20px}
+.db .nlogo{font-weight:600;font-size:18px;color:#0D3B66}
+.db .nlinks{display:flex;gap:4px;font-size:14px}
+.db .nlinks a{padding:7px 11px;border-radius:8px;color:#6b7c93;text-decoration:none}
+.db .nlinks a.on{background:#f2f4f6;color:#0D3B66;font-weight:600}
+.db .npill{margin-left:auto;background:#F4D35E;color:#0D3B66;font-weight:700;border-radius:999px;padding:6px 14px;font-size:13px}
+.db .grid{max-width:1180px;margin:22px auto;padding:0 16px;display:grid;grid-template-columns:1fr 340px;gap:18px;align-items:start}
+.db .hero{background:linear-gradient(135deg,#0D3B66,#164d82);color:#fff;border-radius:16px;padding:24px}
+.db .hero .k{font-size:13px;opacity:.75}
+.db .hero .n{font-size:44px;font-weight:800;color:#F4D35E;line-height:1.1}
+.db .goal{background:#fff;border-radius:14px;border:1px solid #e8e8e8;padding:18px;margin-top:14px}
+.db .goal .t{font-size:12px;color:#6b7c93;text-transform:uppercase;letter-spacing:.06em}
+.db .goal b{font-size:18px;color:#0D3B66}
+.db .nw{background:#fff;border-radius:14px;border:1px solid #e8e8e8;padding:18px;margin-top:14px}
+.db .nudge{background:#0D3B66;color:#fff;border-radius:16px;padding:20px}
+.db .nudge .tag{font-size:11px;font-weight:700;letter-spacing:.08em;color:#F4D35E;text-transform:uppercase}
+.db .nudge h3{font-size:19px;margin:6px 0 8px;line-height:1.25}
+.db .nudge .est{font-size:34px;font-weight:800;color:#F4D35E}
+.db .nudge .est small{font-size:14px;color:rgba(255,255,255,.7);font-weight:500}
+.db .nbtn{display:block;width:100%;border:none;border-radius:10px;padding:12px;font:inherit;font-weight:700;font-size:15px;background:#F4D35E;color:#0D3B66;cursor:pointer;margin-top:12px}
+.db .nbtn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);font-weight:500}
+.db .nudge .row{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:7px 0;border-top:1px solid rgba(255,255,255,.12)}
+.db .nudge .row:first-child{border-top:none}
+.db .nudge .row span:first-child{color:rgba(255,255,255,.65)}
+.db .nudge .opt{display:inline-block;padding:7px 12px;border:1px solid rgba(255,255,255,.3);border-radius:8px;margin:3px 4px 3px 0;cursor:pointer;font-size:13.5px}
+.db .nudge .opt.sel{background:#F4D35E;color:#0D3B66;border-color:#F4D35E;font-weight:600}
+.db .nudge select{font:inherit;font-size:14px;padding:7px;border-radius:8px;border:none;width:100%;margin-top:4px}
+.db .nudge label{display:block;font-size:12.5px;color:rgba(255,255,255,.7);margin-top:10px}
+.db .shelf{background:#fff;border-radius:14px;border:1px solid #e8e8e8;padding:16px;margin-top:16px}
+.db .shelf h4{font-size:15px;color:#0D3B66;margin-bottom:2px}
+.db .shelf p{font-size:12.5px;color:#6b7c93;margin-bottom:10px}
+.db .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.db .tile{border:1px solid #e8e8e8;border-radius:12px;padding:12px;cursor:pointer;font-size:12.5px;color:#6b7c93;background:#fff;text-align:left;font-family:inherit}
+.db .tile:hover{border-color:#0D3B66}
+.db .tile b{display:block;color:#1a2d42;font-size:13.5px;margin-bottom:2px}
+.db .tile.set{border-color:#2d8a4e;background:#f4fbf6}
+.db .tile.set .s{color:#2d8a4e;font-weight:600}
+.small{font-size:11.5px;color:#6b7c93;margin-top:8px;line-height:1.4}
+/* modal */
+.mbg{position:fixed;inset:0;background:rgba(10,25,45,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:40}
+.modal{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:22px;font-family:'Outfit',sans-serif;color:#1a2d42;max-height:90vh;overflow:auto}
+.modal h3{color:#0D3B66;font-size:20px;margin-bottom:4px}
+.modal p{font-size:13.5px;color:#6b7c93;margin-bottom:12px}
+.modal label{display:block;font-size:12.5px;color:#6b7c93;margin:10px 0 4px}
+.modal select,.modal input{font:inherit;font-size:15px;width:100%;padding:9px 11px;border:1.5px solid #e3e7ec;border-radius:10px}
+.carriers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.carriers button,.mopt{font:inherit;font-size:13px;border:1.5px solid #e3e7ec;background:#fff;border-radius:9px;padding:9px 6px;cursor:pointer}
+.carriers button.sel,.mopt.sel{border-color:#0D3B66;background:#0D3B66;color:#fff}
+.mopt{padding:7px 11px;margin:3px 4px 3px 0}
+.mbtn{display:block;width:100%;border:none;border-radius:10px;padding:12px;font:inherit;font-weight:700;font-size:15px;background:#0D3B66;color:#fff;cursor:pointer;margin-top:14px}
+.mbtn:disabled{opacity:.4;cursor:not-allowed}
+.value{font-size:30px;font-weight:800;color:#2d8a4e;margin-top:10px}
+/* zebra-field highlight (toggle) */
+body.showz .zf{outline:2px dashed #e0a800;outline-offset:3px;border-radius:8px;position:relative}
+body.showz .zf::after{content:'⚡ ' attr(data-z);position:absolute;top:-10px;right:6px;background:#ffe9a8;color:#7a4a00;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;font-family:'Outfit',sans-serif;white-space:nowrap;z-index:2}
+.dock{position:fixed;bottom:14px;left:14px;z-index:50;display:flex;gap:6px;font-family:'Outfit',sans-serif}
+.dock button,.dock a{font:inherit;font-size:12.5px;background:#1a2d42;color:#fff;border:none;border-radius:999px;padding:8px 13px;cursor:pointer;text-decoration:none;opacity:.85}
+.dock button.on{background:#e0a800;color:#1a1a1a}
+.internal{display:inline-block;margin-top:14px;background:#e8f5ed;color:#2d8a4e;font-weight:700;border-radius:10px;padding:10px 12px;font-size:13px}
+@media (max-width:900px){.db .grid{grid-template-columns:1fr}.db .nlinks{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING ============ -->
+<div class="ob" id="obView">
+ <div class="wrap">
+  <div class="ob-logo"><div>Asset<span>Align</span></div><div style="font-size:12px;color:#999;font-weight:400" id="obStep"></div></div>
+  <div class="prog" id="prog"></div>
+
+  <!-- 0 invite -->
+  <section data-s="0">
+   <div class="email"><div class="from">From: Meridian Industries Benefits<br>To: maya.chen@meridian-ind.example</div>
+    <h1 style="font-size:19px;color:#1a3a5c;margin-bottom:10px">Your new financial wellness benefit is live</h1>
+    <p style="font-size:14px;color:#444;line-height:1.55">Hi Maya, Meridian has partnered with AssetAlign to give every employee access to a vetted financial advisor, plus Align Credits for the smart money moves you're already making. It's voluntary, free to you, and takes about 5 minutes.</p>
+    <button class="btn-p" onclick="go(1)">Activate my benefit →</button></div>
+  </section>
+
+  <!-- 1 verify -->
+  <section data-s="1" class="hidden"><div class="card">
+   <div class="badge">✓ Pulled from your Meridian payroll record</div>
+   <h1>Let's make sure we have this right</h1><p class="sub">Nothing to type. Just confirm.</p>
+   <div class="sect">You</div>
+   <div class="frow zf" data-z="first/last name"><span class="l">Name</span><span class="v">Maya Chen</span></div>
+   <div class="frow zf" data-z="date_of_birth"><span class="l">Date of birth</span><span class="v">March 14, 1997</span></div>
+   <div class="frow zf" data-z="gender"><span class="l">Gender</span><span class="v">Female</span></div>
+   <div class="frow zf" data-z="garaging_address · state · zip"><span class="l">Home address</span><span class="v">1402 S Congress Ave<br>Austin, TX 78704</span></div>
+   <div class="sect">Work</div>
+   <div class="frow"><span class="l">Employer</span><span class="v">Meridian Industries</span></div>
+   <div class="frow zf" data-z="helps mileage + use"><span class="l">Work location</span><span class="v">2100 E St Elmo Rd, Austin</span></div>
+   <div class="frow"><span class="l">With Meridian since</span><span class="v">June 2021</span></div>
+   <div class="frow"><span class="l">401(k)</span><span class="v">Enrolled</span></div>
+   <button class="btn-p" onclick="go(2)">Looks right →</button><button class="btn-g">Something's wrong</button>
+  </div></section>
+
+  <!-- 2 priorities -->
+  <section data-s="2" class="hidden"><div class="card">
+   <h1>What matters most to you right now?</h1><p class="sub">Tap them in order of importance. This is how we match you with the right advisor.</p>
+   <div id="pris"></div>
+   <button class="btn-p" onclick="go(3)">Next →</button>
+  </div></section>
+
+  <!-- 3 quick questions -->
+  <section data-s="3" class="hidden"><div class="card">
+   <h1>A few quick questions</h1><p class="sub">All optional. These help your advisor hit the ground running.</p>
+   <div id="qs"></div>
+   <button class="btn-p" onclick="go(4)">Find my advisor →</button>
+  </div></section>
+
+  <!-- 4 advisor -->
+  <section data-s="4" class="hidden"><div class="card">
+   <div class="badge">Matched on your #1 priority</div>
+   <div class="adv"><div class="av">MT</div><div><b style="color:#1a3a5c;font-size:17px">Michael Torres, CFP®</b><div style="font-size:13px;color:#888">12 years · Austin, TX · fee-only</div></div></div>
+   <div style="font-size:13.5px;font-weight:500">Pick a time for your free intro call</div>
+   <div class="slots" id="slots"></div>
+   <div class="prep">
+    <div class="q"><div class="ql">Help Michael prep: which of these do you have? <span class="qh">(tap all that apply)</span></div>
+     <div class="opts zf" data-z="ownership (car loan = financed)" id="debts"></div></div>
+   </div>
+   <button class="btn-p" id="bookBtn" onclick="go(5)" disabled style="opacity:.4">Book my call →</button>
+  </div></section>
+
+  <!-- 5 done -->
+  <section data-s="5" class="hidden"><div class="card" style="text-align:center">
+   <div style="font-size:42px">🎉</div><h1>You're booked, Maya</h1>
+   <p class="sub" id="bookedLine">Your intro call with Michael is on the calendar.</p>
+   <div style="font-size:34px;font-weight:800;color:#c8a84b">+25</div><div style="font-size:13px;color:#888;margin-bottom:6px">Align Credits for scheduling</div>
+   <button class="btn-p" onclick="toDash()">Go to my dashboard →</button>
+  </div></section>
+ </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="db hidden" id="dbView">
+ <nav><div class="nlogo">AssetAlign</div><div class="nlinks"><a class="on">Dashboard</a><a>Marketplace</a><a>Vault</a></div><div class="npill" id="credPill">25 Align Credits</div></nav>
+ <div class="grid">
+  <div>
+   <div class="hero"><div class="k">Welcome back, Maya</div><div class="n" id="credHero">25</div><div class="k">Align Credits · every credit is worth a real $1</div></div>
+   <div class="goal"><div class="t">Your goal · set during onboarding</div><b id="goalLine">🏠 Buying a home</b><div style="font-size:13.5px;color:#6b7c93;margin-top:4px">Intro call with Michael Torres booked.</div></div>
+   <div class="nw"><div style="font-size:12px;color:#6b7c93;text-transform:uppercase;letter-spacing:.06em">My net worth snapshot</div>
+     <div id="nwRows" style="font-size:14px;margin-top:8px"></div></div>
+   <div class="shelf">
+    <h4>My Financial Life</h4><p>Where your accounts live. No logins, just so you (and your advisor) have the whole picture in one place.</p>
+    <div class="tiles" id="tiles"></div>
+   </div>
+  </div>
+  <div>
+   <div class="nudge" id="nudge"></div>
+  </div>
+ </div>
+</div>
+
+<div class="mbg hidden" id="mbg"><div class="modal" id="modal"></div></div>
+
+<div class="dock">
+ <button id="zt" onclick="toggleZ()">⚡ Show Zebra fields</button>
+ <button onclick="restart()">↺ Restart</button>
+ <a href="./">Analysis view</a>
+</div>
+
+<script>
+const S={pri:[],q:{},slot:null,debts:new Set(),ins:null,insLen:null,car:null,credits:25,viol:null,doneZ:false};
+const PRIS=['🏠 Buying a home','📈 Growing my investments','🛡️ Protecting my family','💳 Paying down debt','🏖️ Retirement'];
+// real S9 questions (from assetalign-onboarding) + 3 piggybacks (z:true)
+const QS=[
+ {id:'income',l:'What is your approximate annual household income?',o:['Under $50,000','$50,000 – $100,000','$100,000 – $200,000','Over $200,000']},
+ {id:'own_home',l:'Do you currently own a home?',o:['Yes','No'],zf:'residence_ownership'},
+ {id:'emergency',l:'Do you have an emergency fund covering 3–6 months of expenses?',o:['Yes, fully funded','Partially funded','Not yet']},
+ {id:'retire',l:'Are you currently contributing to a retirement account?',o:['Yes, maximizing','Yes, contributing some','Not yet'],auto:'Yes, contributing some',autoNote:'Based on your 401(k) enrollment'},
+ {id:'marital',l:"What's your marital status?",o:['Single','Married','Divorced','Widowed'],zf:'marital_status'},
+ {id:'edu',l:'Highest level of school you finished?',h:'(helps with student-loan planning)',o:['High school','Some college',"Associate's","Bachelor's","Master's or higher"],zf:'education',isNew:1},
+ {id:'credit',l:'How would you rate your credit?',o:['Excellent','Good','Fair','Rebuilding','Not sure'],zf:'credit_score',isNew:1},
+ {id:'commute',l:'How do you usually get to work?',o:['I drive','Transit / bike / walk','I work remotely'],zf:'primary_use',isNew:1},
+ {id:'b401k',l:'Roughly, your current 401(k) balance?',o:['Under $10k','$10k–$50k','$50k–$150k','$150k+','Prefer not to say']},
+ {id:'bira',l:'IRA or old 401(k) balances outside Meridian?',o:['None','Under $10k','$10k–$50k','$50k+','Prefer not to say']},
+ {id:'savings',l:'Savings and investments outside retirement?',o:['Under $5k','$5k–$25k','$25k–$75k','$75k+','Prefer not to say']},
+ {id:'market',l:'When markets drop, what do you usually do?',o:['Buy more','Hold steady','Get nervous','Sell']},
+ {id:'involve',l:'How involved do you want to be in financial decisions?',o:['Hands-on','Collaborative','Hands-off']}
+];
+const DEBTS=['Car loan','Car lease','Student loans','Credit card balance','Mortgage','None of these'];
+const CARRIERS=['Progressive','GEICO','State Farm','Allstate','USAA','Liberty Mutual','Farmers','Nationwide','Other'];
+const CARS={Honda:{Civic:{t:['LX','Sport','EX','Touring'],p:25000},Accord:{t:['LX','Sport','EX-L','Touring'],p:29000},'CR-V':{t:['LX','EX','EX-L','Touring'],p:30000}},
+ Toyota:{Camry:{t:['LE','SE','XLE','XSE'],p:27000},Corolla:{t:['L','LE','SE','XSE'],p:22000},RAV4:{t:['LE','XLE','XLE Premium','Limited'],p:30000}},
+ Ford:{'F-150':{t:['XL','XLT','Lariat','Platinum'],p:42000},Escape:{t:['S','SE','SEL','Titanium'],p:28000}},
+ Nissan:{Altima:{t:['2.5 S','2.5 SV','2.5 SR','2.5 SL'],p:26000}},Tesla:{'Model 3':{t:['Standard','Long Range','Performance'],p:42000}},
+ Subaru:{Outback:{t:['Base','Premium','Limited','Touring'],p:31000}},Hyundai:{Tucson:{t:['SE','SEL','N Line','Limited'],p:28000}}};
+const YEARS=[];for(let y=2026;y>=2010;y--)YEARS.push(y);
+
+let cur=0;
+function go(n){cur=n;document.querySelectorAll('#obView section').forEach(s=>s.classList.toggle('hidden',+s.dataset.s!==n));
+ document.getElementById('prog').innerHTML=[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('');
+ document.getElementById('obStep').textContent=n?`Step ${Math.min(n,5)} of 5`:'';
+ if(n===5){const pr=S.pri[0]||PRIS[0];document.getElementById('bookedLine').textContent=`Your intro call with Michael is ${S.slot||'booked'}. Focus: ${pr.replace(/^\S+\s/,'').toLowerCase()}.`;}
+ window.scrollTo(0,0);}
+
+function renderPris(){document.getElementById('pris').innerHTML=PRIS.map(p=>{const i=S.pri.indexOf(p);return `<div class="pri ${i<0?'unset':''}" onclick="tapPri('${p}')"><b>${i<0?'':i+1}</b>${p}</div>`;}).join('');}
+function tapPri(p){const i=S.pri.indexOf(p);if(i>=0)S.pri.splice(i,1);else S.pri.push(p);renderPris();}
+
+function renderQs(){document.getElementById('qs').innerHTML=QS.map(q=>{const v=S.q[q.id]||(q.auto&&S.q[q.id]===undefined?q.auto:null);
+ return `<div class="q ${q.zf?'zf':''}" ${q.zf?`data-z="${q.zf}${q.isNew?' · NEW Q':''}"`:''}><div class="ql">${q.l} ${q.h?`<span class="qh">${q.h}</span>`:''}</div>
+ <div class="opts">${q.o.map(o=>`<button class="q-opt ${v===o?'sel':''}" onclick="ans('${q.id}',this.textContent)">${o}</button>`).join('')}</div>${q.auto&&S.q[q.id]===undefined?`<div class="qh" style="margin-top:4px">✓ ${q.autoNote}</div>`:''}</div>`;}).join('');}
+function ans(id,v){S.q[id]=S.q[id]===v?null:v;renderQs();}
+
+function renderAdv(){
+ document.getElementById('slots').innerHTML=['Tue 9:00 AM','Tue 1:30 PM','Wed 11:00 AM','Thu 10:30 AM','Thu 3:00 PM','Fri 9:30 AM'].map(s=>`<button class="q-opt ${S.slot===s?'sel':''}" onclick="S.slot='${s}';renderAdv()">${s}</button>`).join('');
+ document.getElementById('debts').innerHTML=DEBTS.map(d=>`<button class="q-opt ${S.debts.has(d)?'sel':''}" onclick="tapDebt('${d}')">${d}</button>`).join('');
+ const b=document.getElementById('bookBtn');b.disabled=!S.slot;b.style.opacity=S.slot?1:.4;}
+function tapDebt(d){if(d==='None of these'){S.debts=new Set(S.debts.has(d)?[]:[d]);}else{S.debts.delete('None of these');S.debts.has(d)?S.debts.delete(d):S.debts.add(d);}renderAdv();}
+
+/* ---------- dashboard ---------- */
+function toDash(){document.getElementById('obView').classList.add('hidden');document.getElementById('dbView').classList.remove('hidden');
+ document.getElementById('goalLine').textContent=S.pri[0]||PRIS[0];window.scrollTo(0,0);renderDash();}
+function setCredits(n){S.credits=n;document.getElementById('credPill').textContent=n+' Align Credits';document.getElementById('credHero').textContent=n;}
+function vehOwnership(){if(S.debts.has('Car lease'))return'Leased';if(S.debts.has('Car loan'))return'Financed';if(S.debts.size)return'Owned';return null;}
+function carValue(c){const base=CARS[c.make][c.model].p*(1+CARS[c.make][c.model].t.indexOf(c.trim)*0.07);const age=Math.max(0.5,2026.9-c.year);
+ const extra=(c.odo-12000*age)*0.06;return Math.max(1500,Math.round((base*0.82*Math.pow(0.94,Math.max(0,age-1))-extra)/100)*100);}
+function milesPerYear(){if(!S.car)return null;const age=Math.max(0.5,2026.9-S.car.year);return Math.round(S.car.odo/age/500)*500;}
+
+function renderDash(){
+ const ins=S.ins,car=S.car;
+ document.getElementById('tiles').innerHTML=
+  `<button class="tile set"><b>🏦 My Bank</b><span class="s">Chase ✓</span></button>`+
+  `<button class="tile set"><b>📈 My 401(k)</b><span class="s">Fidelity ✓</span></button>`+
+  `<button class="tile ${ins?'set':''} zf" data-z="currently_insured" onclick="openIns()"><b>🚗 My Auto Insurance</b><span class="s">${ins?(ins==='none'?'Doesn\'t apply':ins+' ✓'+(S.insLen?' · '+S.insLen:'')):'+ Add'}</span></button>`+
+  `<button class="tile ${car?'set':''} zf" data-z="year/make/model/trim/mileage" onclick="openCar()"><b>🚙 My Car</b><span class="s">${car?`${car.year} ${car.make} ${car.model} ✓`:'What\'s it worth?'}</span></button>`+
+  `<button class="tile"><b>💳 My Credit Card</b><span class="s">+ Add</span></button>`+
+  `<button class="tile"><b>🛡️ Life Insurance</b><span class="s">+ Add</span></button>`;
+ document.getElementById('nwRows').innerHTML=`<div style="display:flex;justify-content:space-between;padding:5px 0"><span>401(k) · Fidelity</span><b>${S.q.b401k||'—'}</b></div>`+
+  `<div style="display:flex;justify-content:space-between;padding:5px 0"><span>Savings</span><b>${S.q.savings||'—'}</b></div>`+
+  `<div style="display:flex;justify-content:space-between;padding:5px 0"><span>🚙 Car</span><b style="color:${car?'#2d8a4e':'#6b7c93'}">${car?'$'+carValue(car).toLocaleString():'<a href="#" onclick="openCar();return false" style="color:#0D3B66">Add your car →</a>'}</b></div>`;
+ renderNudge('pitch');
+}
+
+function missing(){
+ const m=[];
+ if(!S.ins)m.push('insured');
+ if(!S.car)m.push('car');
+ if(!vehOwnership())m.push('ownership');
+ if(!S.q.credit)m.push('credit');
+ if(!S.q.edu)m.push('edu');
+ if(!S.q.commute)m.push('commute');
+ if(!S.car)m.push('miles');
+ return m;
+}
+let nz={};
+function renderNudge(state){
+ const el=document.getElementById('nudge');
+ if(state==='pitch'){
+  el.innerHTML=`<div class="tag">Your next step · Car insurance</div><h3>Think you're paying more than this for car insurance?</h3>
+  <div class="est">~$142<small>/mo</small></div><div style="font-size:12.5px;color:rgba(255,255,255,.65)">What drivers like you in Austin typically pay · The Zebra estimate (illustrative)</div>
+  <p style="font-size:14px;margin-top:10px;color:rgba(255,255,255,.85)">The Zebra compares 100+ carriers. We've already filled in most of it from your profile.</p>
+  <div style="font-size:12.5px;margin-top:8px;color:#F4D35E">+10 Align Credits for requoting</div>
+  <button class="nbtn" onclick="renderNudge('form')">Get my real rate →</button>`;
+ }else if(state==='form'){
+  const m=missing(),own=vehOwnership(),c=S.car;
+  const rows=[['Driver',`Maya, 29 · Female · ${S.q.marital||'—'}`],['Garaged at','1402 S Congress Ave, Austin'],
+   c?['Car',`${c.year} ${c.make} ${c.model} ${c.trim}${own?' · '+own.toLowerCase():''}`]:null,
+   S.ins&&S.ins!=='none'?['Insured with',S.ins+(S.insLen?', '+S.insLen:'')]:null,
+   S.q.commute?['Use',(S.q.commute==='I drive'?'Commute':'Pleasure')+(milesPerYear()?` · ~${milesPerYear().toLocaleString()} mi/yr`:'')]:null,
+   S.q.credit?['Credit',S.q.credit]:null,S.q.edu?['Education',S.q.edu]:null].filter(Boolean);
+  const opt=(k,v)=>`<span class="opt ${nz[k]===v?'sel':''}" data-k="${k}" data-v="${v}" onclick="nz[this.dataset.k]=this.dataset.v;renderNudge('form')">${v}</span>`;
+  let asks='';
+  if(m.includes('insured'))asks+=`<label>Do you have car insurance right now?</label>${['Yes','No'].map(v=>opt('insured',v)).join('')}`;
+  if(m.includes('car'))asks+=`<label>Your car</label><select id="nzY"><option value="">Year</option>${YEARS.map(y=>`<option ${nz.year==y?'selected':''}>${y}</option>`).join('')}</select>
+    <select id="nzM"><option value="">Make</option>${Object.keys(CARS).map(k=>`<option ${nz.make===k?'selected':''}>${k}</option>`).join('')}</select>
+    <select id="nzMo" ${nz.make?'':'disabled'}><option value="">Model</option>${nz.make?Object.keys(CARS[nz.make]).map(k=>`<option ${nz.model===k?'selected':''}>${k}</option>`).join(''):''}</select>
+    <select id="nzT" ${nz.model?'':'disabled'}><option value="">Trim</option>${nz.model?CARS[nz.make][nz.model].t.map(k=>`<option ${nz.trim===k?'selected':''}>${k}</option>`).join(''):''}</select>`;
+  if(m.includes('ownership'))asks+=`<label>Owned, financed or leased?</label>${['Owned','Financed','Leased'].map(v=>opt('own',v)).join('')}`;
+  if(m.includes('credit'))asks+=`<label>Ballpark credit?</label>${['Excellent','Good','Fair','Rebuilding'].map(v=>opt('credit',v)).join('')}`;
+  if(m.includes('edu'))asks+=`<label>Highest education?</label>${['High school','Some college',"Associate's","Bachelor's","Master's+"].map(v=>opt('edu',v)).join('')}`;
+  if(m.includes('commute'))asks+=`<label>Mostly used for?</label>${['Commute','Pleasure','Business'].map(v=>opt('use',v)).join('')}`;
+  if(m.includes('miles'))asks+=`<label>Roughly how many miles a year?</label>${['Under 7.5k','7.5–10k','10–12.5k','12.5–15k','15k+'].map(v=>opt('miles',v)).join('')}`;
+  asks+=`<div class="zf" data-z="violations · always asked"><label>Any accidents or tickets in the last 3 years?</label>${['None','1','2 or more'].map(v=>opt('viol',v)).join('')}</div>`;
+  const nAsk=m.length+1;
+  el.innerHTML=`<div class="tag">${m.length?'Almost there':'One tap away'}</div><h3>${m.length?`Just ${nAsk} quick question${nAsk>1?'s':''}`:'We filled in the rest from your profile'}</h3>
+   ${rows.length?`<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:4px 12px;margin:8px 0">${rows.map(r=>`<div class="row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('')}</div><div style="font-size:11.5px;color:rgba(255,255,255,.55)">Anything off? Tap to edit.</div>`:''}
+   ${asks}
+   <button class="nbtn" ${nz.viol&&formReady(m)?'':'disabled style="opacity:.45;cursor:not-allowed"'} onclick="renderNudge('consent')">See my rates →</button>
+   <button class="nbtn ghost" onclick="renderNudge('pitch')">Not now</button>`;
+  ['nzY','nzM','nzMo','nzT'].forEach(id=>{const s=document.getElementById(id);if(s)s.onchange=()=>{const k={nzY:'year',nzM:'make',nzMo:'model',nzT:'trim'}[id];nz[k]=s.value;if(k==='make'){nz.model='';nz.trim='';}if(k==='model')nz.trim='';renderNudge('form');};});
+ }else if(state==='consent'){
+  el.innerHTML=`<div class="tag">Ready</div><h3>Your details are ready for The Zebra</h3>
+   <p style="font-size:14px;color:rgba(255,255,255,.8)">They'll pull real quotes from 100+ carriers using what you've shared.</p>
+   <button class="nbtn" onclick="renderNudge('handoff')">Get my quotes →</button>
+   <div style="font-size:11px;color:rgba(255,255,255,.55);margin-top:8px;line-height:1.45">By tapping "Get my quotes," you agree AssetAlign may share these details with The Zebra to get you insurance quotes, and that The Zebra and its partners may contact you about them by email, phone or text. Consent isn't required to buy. (Draft, needs counsel review.)</div>`;
+ }else if(state==='handoff'){
+  if(!S.doneZ){S.doneZ=true;setCredits(S.credits+10);}
+  el.innerHTML=`<div class="tag">Done · +10 Align Credits</div><h3>Handing you to The Zebra…</h3>
+   <p style="font-size:14px;color:rgba(255,255,255,.8)">In the real product, The Zebra's results page opens here with everything filled in.</p>
+   <div class="internal">💰 Internal: compensation point reached. All 21 required fields sent.</div>`;
+ }
+}
+function formReady(m){
+ if(m.includes('insured')&&!nz.insured)return false;
+ if(m.includes('car')&&!(nz.year&&nz.make&&nz.model&&nz.trim))return false;
+ if(m.includes('ownership')&&!nz.own)return false;
+ if(m.includes('credit')&&!nz.credit)return false;
+ if(m.includes('edu')&&!nz.edu)return false;
+ if(m.includes('commute')&&!nz.use)return false;
+ if(m.includes('miles')&&!nz.miles)return false;
+ return true;
+}
+
+/* ---------- tile modals ---------- */
+function modal(html){document.getElementById('modal').innerHTML=html;document.getElementById('mbg').classList.remove('hidden');}
+function closeM(){document.getElementById('mbg').classList.add('hidden');renderDash();}
+document.getElementById('mbg').onclick=e=>{if(e.target.id==='mbg')closeM();};
+let tmp={};
+function openIns(){tmp={ins:S.ins,insLen:S.insLen};drawIns();}
+function drawIns(){modal(`<h3>🚗 My Auto Insurance</h3><p>Who do you have car insurance with? Just a bookmark. We never log in.</p>
+ <div class="carriers">${CARRIERS.map(c=>`<button class="${tmp.ins===c?'sel':''}" onclick="tmp.ins='${c}';drawIns()">${c}</button>`).join('')}</div>
+ ${tmp.ins&&tmp.ins!=='none'?`<label>How long have you been with them?</label>${['Less than 1 year','1–3 years','3–5 years','5+ years'].map(v=>`<button class="mopt ${tmp.insLen===v?'sel':''}" onclick="tmp.insLen='${v}';drawIns()">${v}</button>`).join('')}`:''}
+ <button class="mbtn" ${tmp.ins?'':'disabled'} onclick="S.ins=tmp.ins;S.insLen=tmp.insLen;closeM()">Save</button>
+ <button class="mbtn" style="background:none;color:#6b7c93;font-weight:500" onclick="S.ins='none';closeM()">I don't have car insurance</button>`);}
+function openCar(){tmp=S.car?{...S.car}:{};drawCar();}
+function drawCar(){const m=tmp.make?CARS[tmp.make]:null,mo=m&&tmp.model?m[tmp.model]:null;
+ const ready=tmp.year&&tmp.make&&tmp.model&&tmp.trim&&tmp.odo;
+ modal(`<h3>🚙 What's your car worth?</h3><p>Add your car to see its value and include it in your net worth.</p>
+ <label>Year</label><select onchange="tmp.year=+this.value;drawCar()"><option value="">Select…</option>${YEARS.map(y=>`<option ${tmp.year==y?'selected':''}>${y}</option>`).join('')}</select>
+ <label>Make</label><select onchange="tmp.make=this.value;tmp.model='';tmp.trim='';drawCar()"><option value="">Select…</option>${Object.keys(CARS).map(k=>`<option ${tmp.make===k?'selected':''}>${k}</option>`).join('')}</select>
+ <label>Model</label><select ${m?'':'disabled'} onchange="tmp.model=this.value;tmp.trim='';drawCar()"><option value="">Select…</option>${m?Object.keys(m).map(k=>`<option ${tmp.model===k?'selected':''}>${k}</option>`).join(''):''}</select>
+ <label>Trim</label><select ${mo?'':'disabled'} onchange="tmp.trim=this.value;drawCar()"><option value="">Select…</option>${mo?mo.t.map(k=>`<option ${tmp.trim===k?'selected':''}>${k}</option>`).join(''):''}</select>
+ <label>Odometer (miles)</label><input type="text" inputmode="numeric" placeholder="e.g. 52,000" value="${tmp.odo?tmp.odo.toLocaleString():''}" onchange="tmp.odo=+this.value.replace(/\\D/g,'')||null;drawCar()">
+ ${ready?`<div class="value">≈ $${carValue(tmp).toLocaleString()}</div><div style="font-size:12px;color:#6b7c93">Illustrative estimate based on year, trim and mileage.</div>`:''}
+ <button class="mbtn" ${ready?'':'disabled'} onclick="S.car={...tmp};closeM()">Add to my net worth</button>`);}
+
+/* ---------- misc ---------- */
+function toggleZ(){document.body.classList.toggle('showz');document.getElementById('zt').classList.toggle('on');}
+function restart(){location.reload();}
+renderPris();renderQs();renderAdv();go(0);
+</script>
+</body>
+</html>
