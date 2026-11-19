@@ -4815,7 +4815,8 @@
 <style>
 .zn{display:inline-block;background:#c8a84b;color:#1a3a5c;font:800 9.5px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.06em;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;text-transform:uppercase;white-space:nowrap}
 .znbox{outline:2px dashed #c8a84b;outline-offset:3px}
-#zlabLegend{position:fixed;left:12px;bottom:12px;z-index:99999;background:#1a3a5c;color:#fff;font:12px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:calc(100vw - 24px)}
+#zlabLegend{position:fixed;left:12px;bottom:12px;z-index:99999;background:#1a3a5c;color:#fff;font:12px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:calc(100vw - 330px)}
+@media(max-width:640px){#zlabLegend .zl-txt{display:none}#zlabLegend{max-width:none;bottom:auto;top:8px}}
 #zlabLegend a{color:#c8a84b;font-weight:600;margin-left:10px;text-decoration:none}
 
 .zl-sum{background:rgba(255,255,255,.07);border:1px solid rgba(244,211,94,.5);border-radius:10px;padding:10px 12px;margin:4px 0 14px}
@@ -4841,7 +4842,7 @@
 .zl-comp b{color:#3d2e00}
 .zl-comp .g{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin-top:6px}
 </style>
-<div id="zlabLegend">Zebra test build · <span class="zn" style="margin-left:0">NEW</span> = proposed change, everything else is today's product <a href="index.html">↺ Restart</a><a href="../">Analysis</a></div>
+<div id="zlabLegend"><span class="zl-txt">Zebra test build · <span class="zn" style="margin-left:0">NEW</span> = proposed change, everything else is today's product</span> <a href="index.html">↺ Restart</a><a href="../">Analysis</a></div>
 <div id="zlCarModal"><div class="box">
   <button class="x" onclick="zlCloseCar()">×</button>
   <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--yellow-dark)">My Car <span class="zn">NEW · still deciding</span></div>
@@ -4860,7 +4861,7 @@ function zlLoad(){ try { return JSON.parse(sessionStorage.getItem(ZL_KEY)) || {}
 function zlSave(p){ const m = Object.assign(zlLoad(), p); try { sessionStorage.setItem(ZL_KEY, JSON.stringify(m)); } catch(e){} return m; }
 (function(){ // carry the extra handoff fields
   const q = new URLSearchParams(location.search), p = {};
-  ['z_last','z_dob','z_gender','z_street','z_city','z_zip','z_education','z_commute','z_credit','z_debts'].forEach(k => { if (q.get(k) !== null) p[k] = q.get(k); });
+  ['z_last','z_dob','z_gender','z_street','z_city','z_zip','z_education','z_worksite','z_credit','z_debts'].forEach(k => { if (q.get(k) !== null) p[k] = q.get(k); });
   if (Object.keys(p).length) zlSave(p);
 })();
 
@@ -4934,7 +4935,7 @@ function zlKnown(){
   const debts = z.z_debts ? z.z_debts.split('|') : null;
   let own = null;
   if (debts) own = debts.includes('Car lease') ? 'Leased' : debts.includes('Car loan') ? 'Financed' : 'Owned';
-  const use = { 'I drive': 'Commute', 'I work from home': 'Pleasure', 'Public transit': 'Pleasure' }[z.z_commute] || null;
+  const use = z.z_worksite ? 'Commute' : null; // assumed: payroll says she works on-site
   return {
     name: s.name ? s.name + (z.z_last ? ' ' + z.z_last : '') : null, age: s.age, gender: z.z_gender, marital: s.marital, email: s.email,
     address: z.z_street ? z.z_street + ', ' + z.z_city + ', ' + (s.state || '') + ' ' + z.z_zip : null, state: s.state, zip: z.z_zip,
@@ -4972,7 +4973,7 @@ function zlAdaptForm(){
   if (k.insured) rows.push(['Insured now', k.insured + (k.insLen ? ' · ' + k.insLen : '')]);
   if (k.car) rows.push(['Car', k.car.year + ' ' + k.car.make + ' ' + k.car.model + ' ' + k.car.trim]);
   if (k.ownership) rows.push(['Owned / financed / leased', k.ownership]);
-  if (k.use) rows.push(['Mostly used for', k.use]);
+  if (k.use) rows.push(['Mostly used for', k.use + ' <span style="opacity:.6">(you work on-site)</span>']);
   if (k.miles) rows.push(['Miles per year', '~' + k.miles.toLocaleString()]);
   const sum = '<div class="zl-sum znbox"><div class="h">✓ Already on file, nothing to retype <span class="zn">NEW</span></div>' +
     rows.map(r => '<div class="r"><span>' + r[0] + '</span><span>' + r[1] + '</span></div>').join('') + '</div>';
@@ -5013,22 +5014,69 @@ function zlAdaptForm(){
 const _zlBoundary = showDemoBoundary;
 showDemoBoundary = function(){
   _zlBoundary();
-  const k = zlKnown(), a = zlAns, val = id => { const e = document.getElementById(id); return e && e.value ? e.value : null; };
-  const make = val('vMake');
-  const F = [
-    ['state', k.state], ['zipcode', k.zip], ['first_name', k.name], ['last_name', k.name], ['date_of_birth', k.age], ['gender', k.gender], ['email', k.email],
-    ['marital_status', k.marital || a.marital], ['education', k.education || a.education], ['residence_ownership', k.residence || a.residence],
-    ['credit_score', k.credit || val('zCredit') || (['CA','HI','MA'].includes((k.state||'').toUpperCase()) ? 'exempt' : null)],
-    ['currently_insured', k.insured || (typeof userDrives !== 'undefined' && userDrives !== null ? 'y' : null)],
-    ['violations', a.violations], ['garaging_address', k.address], ['year', val('vYear')], ['make', make], ['model', make && make.trim().includes(' ') ? make : null],
-    ['submodel', k.car ? k.car.trim : null], ['ownership', val('zOwnership')], ['primary_use', k.use || a.use], ['annual_mileage', k.miles || a.miles]
-  ];
+  const F = zlFields();
   const got = F.filter(f => f[1]).length, miss = F.filter(f => !f[1]).map(f => f[0]);
   document.getElementById('nudgeSuccess').insertAdjacentHTML('beforeend',
     '<div class="zl-comp"><b>💰 Internal only, not shown to members <span class="zn">NEW</span></b><br>' +
     (got === 21 ? '<b>Compensation point reached: 21 / 21 required fields handed to The Zebra.</b>' : '<b>' + got + ' / 21 fields.</b> Still missing: ' + miss.join(', ') + (miss.length === 1 && miss[0] === 'submodel' ? ' (comes from the VIN, or Zebra asks it)' : '')) +
     '</div>');
 };
+
+/* Live counter: same 21 fields, same order as Fritz's sheet */
+function zlFields(){
+  const s = aaLoadSession(), z = zlLoad(), k = zlKnown(), a = zlAns;
+  const val = id => { const e = document.getElementById(id); return e && e.value ? e.value : null; };
+  const mk = (val('vMake') || '').trim().split(' ').filter(Boolean);
+  const exempt = ['CA','HI','MA'].includes((k.state || '').toUpperCase());
+  const ud = typeof userDrives !== 'undefined' ? userDrives : null;
+  const src = (known, from) => known ? from : 'Zebra card';
+  return [
+    ['state', k.state, 'payroll'], ['zipcode', k.zip, 'payroll'],
+    ['currently_insured', k.insured || (ud !== null ? (ud ? 'Yes' : 'No') : null), src(k.insured, 'Car Insurance tile')],
+    ['credit_score', k.credit || val('zCredit') || (exempt ? 'not required' : null), src(k.credit, 'quick questions')],
+    ['date_of_birth', z.z_dob, 'payroll'], ['education', k.education || a.education, src(k.education, 'quick questions')],
+    ['email', s.email, 'account'], ['first_name', s.name, 'payroll'], ['gender', k.gender, 'payroll'], ['last_name', z.z_last, 'payroll'],
+    ['marital_status', k.marital || a.marital, src(k.marital, 'quick questions')],
+    ['residence_ownership', k.residence || a.residence, src(k.residence, 'quick questions')],
+    ['violations', a.violations, 'Zebra card'],
+    ['annual_mileage', k.miles ? '~' + k.miles.toLocaleString() : a.miles, src(k.miles, 'My Car tile')],
+    ['garaging_address', z.z_street, 'payroll'],
+    ['make', k.car ? k.car.make : mk[0], src(k.car, 'My Car tile')],
+    ['model', k.car ? k.car.model : (mk.slice(1).join(' ') || null), src(k.car, 'My Car tile')],
+    ['ownership', k.ownership || val('zOwnership'), src(k.ownership, 'booking')],
+    ['primary_use', k.use || a.use, k.use ? 'ASSUMED: works on-site' : 'Zebra card'],
+    ['submodel', k.car ? k.car.trim : null, 'My Car tile'],
+    ['year', k.car ? k.car.year : val('vYear'), src(k.car, 'My Car tile')]
+  ];
+}
+
+function zlCounterInit(getFields){
+  const st = document.createElement('style');
+  st.textContent = '#zlCount{position:fixed;right:12px;bottom:12px;z-index:99999;width:290px;max-width:calc(100vw - 24px);background:#1a3a5c;color:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.3);font:13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;user-select:none}' +
+    '#zlCount .zc-top{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}#zlCount .zc-top b{font-size:20px;margin-left:auto;color:#c8a84b}#zlCount .zc-top small{opacity:.6}' +
+    '#zlCount .zc-bar{height:6px;margin:0 14px 10px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}#zlCount .zc-bar i{display:block;height:100%;background:#c8a84b;transition:width .4s}' +
+    '#zlCount .zc-list{max-height:55vh;overflow:auto;border-top:1px solid rgba(255,255,255,.12);padding:6px 14px 10px}' +
+    '#zlCount .zc-list div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-size:12px}#zlCount .zc-list .n{opacity:.45}#zlCount .zc-list em{font-style:normal;opacity:.75;text-align:right}#zlCount .zc-list .a em{color:#f4b860;opacity:1}' +
+    '#zlCount.zc-done{background:#1f6b3a}#zlCount.zc-done .zc-top b{color:#fff}' +
+    '';
+  document.head.appendChild(st);
+  const el = document.createElement('div'); el.id = 'zlCount'; document.body.appendChild(el);
+  let open = false, last = '';
+  el.addEventListener('click', function(){ open = !open; draw(); });
+  function draw(){
+    const F = getFields(), n = F.filter(function(f){ return f[1]; }).length;
+    let h = '<div class="zc-top"><span>' + (n === 21 ? '💰 Compensation point' : 'Zebra fields') + '</span><small>' + (open ? 'hide ▾' : 'details ▴') + '</small><b>' + n + ' / 21</b></div>' +
+      '<div class="zc-bar"><i style="width:' + (n / 21 * 100) + '%"></i></div>';
+    if (open) h += '<div class="zc-list">' + F.map(function(f){
+      const a = f[1] && /^ASSUMED/.test(f[2]);
+      return '<div class="' + (f[1] ? (a ? 'y a' : 'y') : 'n') + '"><span>' + (f[1] ? '✓ ' : '○ ') + f[0] + '</span><em>' + (f[1] ? f[1] + ' · ' + f[2] : 'not yet') + '</em></div>';
+    }).join('') + '</div>';
+    if (h !== last) { el.innerHTML = h; last = h; }
+    el.classList.toggle('zc-done', n === 21);
+  }
+  draw(); setInterval(draw, 400);
+}
+zlCounterInit(zlFields);
 </script>
 </body>
 </html>
