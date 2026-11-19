@@ -477,6 +477,7 @@ body { background: #f5f5f3; font-family: -apple-system, BlinkMacSystemFont, 'Seg
       <div class="field"><label>ZIP code</label><div class="fval" id="f_zip">—</div></div>
       <div class="field"><label>Street address <span class="zn">NEW</span></label><div class="fval">1402 S Congress Ave, Austin</div></div>
       <div class="field"><label>Gender <span class="zn">NEW</span></label><div class="fval">Female</div></div>
+      <div class="field"><label>Work location <span class="zn">NEW</span></label><div class="fval">2100 E St Elmo Rd, Austin (on-site)</div></div>
       <!-- 2026-09-09 — GIFT MODE only: hidden by default, shown by
            initGiftMode() below for an independent (non-employer) enrollee
            who has no Finch/payroll state on file to prefill from. -->
@@ -2782,18 +2783,18 @@ window.addEventListener('message', function(e){
 <style>
 .zn{display:inline-block;background:#c8a84b;color:#1a3a5c;font:800 9.5px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:.06em;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;text-transform:uppercase;white-space:nowrap}
 .znbox{outline:2px dashed #c8a84b;outline-offset:3px}
-#zlabLegend{position:fixed;left:12px;bottom:12px;z-index:99999;background:#1a3a5c;color:#fff;font:12px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:calc(100vw - 24px)}
+#zlabLegend{position:fixed;left:12px;bottom:12px;z-index:99999;background:#1a3a5c;color:#fff;font:12px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:8px 12px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.25);max-width:calc(100vw - 330px)}
+@media(max-width:640px){#zlabLegend .zl-txt{display:none}#zlabLegend{max-width:none;bottom:auto;top:8px}}
 #zlabLegend a{color:#c8a84b;font-weight:600;margin-left:10px;text-decoration:none}
 </style>
-<div id="zlabLegend">Zebra test build · <span class="zn" style="margin-left:0">NEW</span> = proposed change, everything else is today's product <a href="index.html">↺ Restart</a><a href="../">Analysis</a></div>
+<div id="zlabLegend"><span class="zl-txt">Zebra test build · <span class="zn" style="margin-left:0">NEW</span> = proposed change, everything else is today's product</span> <a href="index.html">↺ Restart</a><a href="../">Analysis</a></div>
 <script>
 /* ── zebra-lab patches (onboarding) ── */
 (function(){
   const F = allQuestions.financial;
   const i = F.findIndex(q => q.id === 'marital');
   F.splice(i + 1, 0,
-    {id:'education', isNew:true, label:"What's the highest level of education you've completed?", show:()=>true, opts:['High school','Some college','Associate degree',"Bachelor's degree","Master's or higher"], autoVal:null, autoNote:null},
-    {id:'commute', isNew:true, label:'How do you usually get to work?', show:()=>true, opts:['I drive','Public transit','I work from home','Other'], autoVal:null, autoNote:null});
+    {id:'education', isNew:true, label:"What's the highest level of education you've completed?", show:()=>true, opts:['High school','Some college','Associate degree',"Bachelor's degree","Master's or higher"], autoVal:null, autoNote:null});
   F.push({id:'credit', isNew:true, label:'How would you describe your credit?', show:()=>true, opts:['Excellent','Good','Fair','Poor','Not sure'], autoVal:null, autoNote:null});
 })();
 const _zlabRenderQ = renderQ;
@@ -2814,10 +2815,54 @@ buildBaseHandoffParams = function(){
   const h = _zlabBase();
   h.set('z_last', finchProfile.last_name); h.set('z_dob', finchProfile.dob); h.set('z_gender', 'Female');
   h.set('z_street', '1402 S Congress Ave'); h.set('z_city', 'Austin'); h.set('z_zip', finchProfile.home_zip);
-  ['education','commute','credit'].forEach(k => { if (selectedAnswers[k]) h.set('z_' + k, selectedAnswers[k]); });
+  h.set('z_worksite', '2100 E St Elmo Rd, Austin');
+  ['education','credit'].forEach(k => { if (selectedAnswers[k]) h.set('z_' + k, selectedAnswers[k]); });
   if (zlabDebts.size) h.set('z_debts', [...zlabDebts].join('|'));
   return h;
 };
+let zlMax = 1;
+const _zlGo = go;
+go = function(n, p){ if (typeof n === 'number') zlMax = Math.max(zlMax, n); return _zlGo(n, p); };
+
+function zlCounterInit(getFields){
+  const st = document.createElement('style');
+  st.textContent = '#zlCount{position:fixed;right:12px;bottom:12px;z-index:99999;width:290px;max-width:calc(100vw - 24px);background:#1a3a5c;color:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.3);font:13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;user-select:none}' +
+    '#zlCount .zc-top{display:flex;align-items:center;gap:8px;padding:10px 14px 6px}#zlCount .zc-top b{font-size:20px;margin-left:auto;color:#c8a84b}#zlCount .zc-top small{opacity:.6}' +
+    '#zlCount .zc-bar{height:6px;margin:0 14px 10px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}#zlCount .zc-bar i{display:block;height:100%;background:#c8a84b;transition:width .4s}' +
+    '#zlCount .zc-list{max-height:55vh;overflow:auto;border-top:1px solid rgba(255,255,255,.12);padding:6px 14px 10px}' +
+    '#zlCount .zc-list div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-size:12px}#zlCount .zc-list .n{opacity:.45}#zlCount .zc-list em{font-style:normal;opacity:.75;text-align:right}#zlCount .zc-list .a em{color:#f4b860;opacity:1}' +
+    '#zlCount.zc-done{background:#1f6b3a}#zlCount.zc-done .zc-top b{color:#fff}' +
+    '';
+  document.head.appendChild(st);
+  const el = document.createElement('div'); el.id = 'zlCount'; document.body.appendChild(el);
+  let open = false, last = '';
+  el.addEventListener('click', function(){ open = !open; draw(); });
+  function draw(){
+    const F = getFields(), n = F.filter(function(f){ return f[1]; }).length;
+    let h = '<div class="zc-top"><span>' + (n === 21 ? '💰 Compensation point' : 'Zebra fields') + '</span><small>' + (open ? 'hide ▾' : 'details ▴') + '</small><b>' + n + ' / 21</b></div>' +
+      '<div class="zc-bar"><i style="width:' + (n / 21 * 100) + '%"></i></div>';
+    if (open) h += '<div class="zc-list">' + F.map(function(f){
+      const a = f[1] && /^ASSUMED/.test(f[2]);
+      return '<div class="' + (f[1] ? (a ? 'y a' : 'y') : 'n') + '"><span>' + (f[1] ? '✓ ' : '○ ') + f[0] + '</span><em>' + (f[1] ? f[1] + ' · ' + f[2] : 'not yet') + '</em></div>';
+    }).join('') + '</div>';
+    if (h !== last) { el.innerHTML = h; last = h; }
+    el.classList.toggle('zc-done', n === 21);
+  }
+  draw(); setInterval(draw, 400);
+}
+zlCounterInit(function(){
+  const fin = zlMax >= 2, A = selectedAnswers, D = zlabDebts;
+  const own = D.size ? (D.has('Car lease') ? 'Leased' : D.has('Car loan') ? 'Financed' : 'Owned') : null;
+  return [
+    ['state', fin && 'TX', 'payroll'], ['zipcode', fin && '78704', 'payroll'], ['currently_insured', null, ''],
+    ['credit_score', A.credit && A.credit !== 'Not sure' && A.credit, 'quick questions'], ['date_of_birth', fin && '3/14/1997', 'payroll'],
+    ['education', A.education, 'quick questions'], ['email', 'maya.chen@example.com', 'account'], ['first_name', fin && 'Maya', 'payroll'],
+    ['gender', fin && 'Female', 'payroll'], ['last_name', fin && 'Chen', 'payroll'], ['marital_status', A.marital, 'quick questions'],
+    ['residence_ownership', A.own_home && (A.own_home === 'Yes' ? 'Own' : 'Rent'), 'quick questions'], ['violations', null, ''],
+    ['annual_mileage', null, ''], ['garaging_address', fin && '1402 S Congress Ave', 'payroll'], ['make', null, ''], ['model', null, ''],
+    ['ownership', own, 'booking'], ['primary_use', fin && 'Commute', 'ASSUMED: works on-site'], ['submodel', null, ''], ['year', null, '']
+  ];
+});
 </script>
 </body>
 </html>
