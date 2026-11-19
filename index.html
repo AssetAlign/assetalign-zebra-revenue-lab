@@ -83,6 +83,15 @@ header a{margin-left:auto;font-size:14px;color:var(--navy);font-weight:600}
 .f .v{display:block;color:var(--text);font-weight:600;font-size:12.5px;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .f .s{display:block;font-size:10.5px;margin-top:2px}
 .f.est{border-style:dashed}
+.pig{font-size:10.5px;font-weight:700;color:#7a4a00;background:#ffe9a8;border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+.pigbox{border:1.5px solid #f0c94a;background:#fffaf0;border-radius:12px;padding:10px 12px;margin-top:10px}
+.skip{background:var(--green-bg);border-radius:12px;padding:14px;color:var(--green);font-weight:600;font-size:14px;margin-top:8px}
+table.cat{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);font-size:13.5px;margin-top:10px}
+table.cat th,table.cat td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+table.cat th{background:var(--gray-bg);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+table.cat td code{font-size:12px;color:var(--navy)}
+.t{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.t-ask{background:var(--green-bg);color:var(--green)}.t-inf{background:var(--purple-bg);color:var(--purple)}.t-fut{background:var(--blue-bg);color:var(--blue)}.t-no{background:var(--red-bg);color:var(--red)}
 .compare{margin:22px 0 40px}
 .compare h2{font-size:22px;color:var(--navy);margin-bottom:4px}
 .compare>p{color:var(--muted);margin-bottom:12px}
@@ -109,8 +118,9 @@ table.cmp td.num{font-weight:800;color:var(--navy);font-size:16px;white-space:no
   <div class="intro">
     <div class="who"><b>Maya Chen, 29 · Austin, TX</b><br>Works at Meridian Industries (fictional employer), on-site, 9-mile commute. Rents. Drives a 2020 Honda Civic EX (financed), insured with Progressive for 4 years.</div>
     <div class="seg" id="modeSeg">
-      <button data-m="F" class="on">With Finch (payroll connected)</button>
-      <button data-m="N">Without Finch (Maya types it)</button>
+      <button data-m="N">Without Finch</button>
+      <button data-m="F">With Finch</button>
+      <button data-m="P" class="on">Finch + piggybacks ⚡</button>
     </div>
   </div>
   <div class="timeline" id="timeline"></div>
@@ -132,8 +142,35 @@ table.cmp td.num{font-weight:800;color:var(--navy);font-size:16px;white-space:no
   </div>
 
   <div class="compare">
-    <h2>With Finch vs. without, side by side</h2>
-    <p>Same person, same platform. The only difference is whether her employer's payroll is connected.</p>
+    <h2>Every piggyback opportunity we found</h2>
+    <p>Two kinds: <b>ask it somewhere it already makes sense</b> (a question with a real financial-planning reason of its own), or <b>infer it from something she already gave us</b> and let her correct it. The ⚡ mode above uses the first 9 rows.</p>
+    <table class="cat">
+      <tr><th>Zebra field(s)</th><th>Where we pick it up</th><th>How it shows up for Maya</th><th>Type</th></tr>
+      <tr><td><code>gender</code> <code>garaging_address</code></td><td>Onboarding S2 (Finch)</td><td>Already in the payroll record. Show it on the "confirm your info" card.</td><td><span class="t t-inf">Infer + confirm</span></td></tr>
+      <tr><td><code>education</code></td><td>Onboarding S9</td><td>"Highest level of school you finished?" next to a student-loan question. Advisors want this for student-loan planning anyway.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>credit_score</code></td><td>Onboarding S9</td><td>"How would you rate your credit?" is a standard financial-health question. Takes it off the Zebra card.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>primary_use</code> (+ helps <code>annual_mileage</code>)</td><td>Onboarding S9</td><td>"How do you usually get to work?" Drive / transit / remote. Commute cost is a real budgeting topic. Finch work location gives the distance.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>ownership</code> (vehicle)</td><td>Advisor booking: "anything Michael should know?"</td><td>"Which debts do you have?" Car loan / car lease / student loans / credit cards. Car loan = financed, lease = leased, neither = owned outright.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>currently_insured</code></td><td>My Financial Life · Auto Insurance tile</td><td>Picking a carrier means she's insured. "I don't have this" means she isn't (or doesn't drive).</td><td><span class="t t-inf">Infer + confirm</span></td></tr>
+      <tr><td><code>year</code> <code>make</code> <code>model</code> <code>submodel</code></td><td>My Financial Life · new "My Car" tile</td><td>"What's your car worth?" A car-value check (like KBB) for her net worth. She picks year/make/model/trim because she wants the number.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>annual_mileage</code></td><td>My Car tile</td><td>The car-value check asks the odometer reading anyway. Odometer ÷ car age = miles per year, cross-checked against the commute.</td><td><span class="t t-inf">Infer + confirm</span></td></tr>
+      <tr><td><code>violations</code></td><td>Zebra card</td><td>The <b>one</b> question that stays. "Any accidents or tickets in the last 3 years?" One tap.</td><td><span class="t t-no">Never assume</span></td></tr>
+      <tr><td><code>new_policy_effective_date</code> (rate-bearing)</td><td>Auto Insurance tile</td><td>"When does it renew?" Then we time the Zebra nudge for 30 days before renewal, when people actually switch.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>insured_length</code>, <code>current_carrier</code></td><td>Auto Insurance tile</td><td>"How long have you been with them?" one chip. Carrier name comes free from the tile.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>phone</code> (nice-to-have)</td><td>Account activation</td><td>Phone for sign-in security codes. Zebra's prepop already takes phone.</td><td><span class="t t-ask">Ask in context</span></td></tr>
+      <tr><td><code>occupation</code> <code>employment</code> (rate-bearing)</td><td>Onboarding S2 (Finch)</td><td>Job title and employment status are in the Finch employment record.</td><td><span class="t t-inf">Infer + confirm</span></td></tr>
+      <tr><td>vehicle, VIN, carrier, insured, financed</td><td>Vault: "store your insurance card"</td><td>She uploads her ID card for safekeeping and earns credits. Document reading pulls everything off it.</td><td><span class="t t-fut">Build next</span></td></tr>
+      <tr><td><code>currently_insured</code> <code>ownership</code> <code>annual_mileage</code></td><td>Plaid (future)</td><td>A monthly Progressive payment means insured; a Honda Financial payment means financed; gas spend gives a mileage signal.</td><td><span class="t t-fut">Future</span></td></tr>
+      <tr><td><code>primary_use</code></td><td>Finch pay statements</td><td>A parking or commuter deduction means she drives to work.</td><td><span class="t t-fut">Future</span></td></tr>
+      <tr><td><code>education</code></td><td>Job title (Finch)</td><td>"Software Engineer" suggests a degree, but it's a guess. Use it only to pre-select the S9 chip, never to send without her confirming.</td><td><span class="t t-inf">Weak hint only</span></td></tr>
+      <tr><td><code>gender</code></td><td>Her first name</td><td>Don't. It's wrong often enough to change the quote and it's a bad look. Use payroll, or ask.</td><td><span class="t t-no">Never assume</span></td></tr>
+    </table>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px">The rule that keeps this clean: every assumption is shown back to her pre-filled and editable, and every piggyback question has a real reason to be there on its own. The driving record is never assumed. A wrong "no tickets" makes the quote jump when she goes to buy, she walks, and the lead is worth less to Zebra.</p>
+  </div>
+
+  <div class="compare">
+    <h2>All three side by side</h2>
+    <p>Same person, same platform. The differences are whether payroll is connected, and whether we piggyback Zebra fields onto steps she's already doing.</p>
     <table class="cmp" id="cmp"></table>
     <div class="grid2">
       <div class="sc"><h4>What Finch actually buys us</h4>
@@ -200,14 +237,25 @@ const STAGES=[
   F:{gain:[],note:'21 of 21. Maya taps "Get my quotes", and that tap is her consent. Her full profile goes to The Zebra and we hit the compensation point.'},
   N:{gain:[],note:'21 of 21 here too. It just took more typing and more questions to get here.'}}
 ];
-let mode='F',step=0;
+// ⚡ piggyback mode: Finch + Zebra fields ridden onto steps she already does
+const PIG={
+ s9:{gain:['marital_status','residence_ownership','education','credit_score','primary_use'],src:'Onboarding question',note:'Three extra one-tap questions, each with its own planning reason: education (student-loan planning), credit (financial health), how she gets to work (commute budget). That\'s 5 Zebra fields from one screen she\'s already on.'},
+ match:{gain:['ownership'],src:'Advisor prep: "car loan"',note:'Before her advisor call: "Which debts should Michael know about?" She taps "Car loan", which tells us the car is financed.'},
+ mfl:{gain:['currently_insured','year','make','model','submodel','annual_mileage'],est:['annual_mileage'],src:'My Financial Life',note:'Two tiles do the heavy lifting. Auto Insurance: picking Progressive = insured, plus renewal month and how long. My Car: "What\'s it worth?" She picks year/make/model/trim and the odometer because she wants the value; odometer ÷ age = ~9,500 mi/yr. That\'s 6 fields, and she thinks she\'s checking her net worth.'},
+ z1:{gain:['violations'],src:'Zebra card',note:'By the time she opens the Zebra card we have 20 of 21. It\'s all pre-filled, with one question: tickets or accidents in the last 3 years. One tap.'},
+ z2:{gain:[],note:'Skipped. We already have the car from the My Car tile, so no VIN needed.'},
+ last:{gain:[],note:'Skipped. Nothing left to ask.'}
+};
+STAGES.forEach(s=>{s.P=PIG[s.id]||s.F;});
+let mode='P',step=0;
 
 function had(upto){const s=new Set();for(let i=0;i<=upto;i++)STAGES[i][mode].gain.forEach(f=>s.add(f));return s;}
 function whenGot(f){for(let i=0;i<STAGES.length;i++)if(STAGES[i][mode].gain.includes(f))return i;return -1;}
 
 function screenHTML(){
-  const st=STAGES[step],M=MAYA,F=mode==='F';
+  const st=STAGES[step],M=MAYA,F=mode!=='N';
   const hit=f=>st[mode].gain.includes(f)?'hit':'';
+  if(mode==='P'){const ph=pigScreen(st.id);if(ph)return ph;}
   const val=(f,v)=>F||!st[mode].gain.includes(f)?`<span class="v">${v}</span>`:`<span class="typed">${v}</span>`;
   switch(st.id){
   case 'invite':return `<div class="where">Email inbox</div><div class="email"><div class="from">From: Meridian Industries Benefits · To: ${M.email}</div>
@@ -272,6 +320,48 @@ function screenHTML(){
   }
 }
 
+function pigScreen(id){
+  const Z='<span class="pig">⚡ Zebra field</span>';
+  const q=(t,opts,sel,z)=>`<div style="font-size:13.5px;margin:10px 0 4px">${t}${z?Z:''}</div>`+opts.map(o=>`<span class="chip ${o===sel?'sel':''}">${o}</span>`).join('');
+  switch(id){
+  case 's9':return `<div class="where">Onboarding · Quick questions</div><h2>A few quick questions</h2><p class="lead">Same screen as today, plus 3 one-tap questions that each have their own planning reason.</p>
+    ${q('Do you currently own a home?',['Yes','No'],'No',1)}
+    ${q('Marital status?',['Single','Married','Divorced','Widowed'],'Single',1)}
+    <div class="pigbox">${q('Highest level of school you finished? <span class="l" style="color:var(--muted)">(helps with student-loan planning)</span>',['High school','Some college',"Associate's","Bachelor's","Master's+"],"Bachelor's",1)}
+    ${q('How would you rate your credit?',['Excellent','Good','Fair','Rebuilding','Not sure'],'Good',1)}
+    ${q('How do you usually get to work?',['I drive','Transit / bike','Remote'],'I drive',1)}</div>
+    <span class="btn">Find my advisor →</span>`;
+  case 'match':return `<div class="where">Onboarding · Your match</div><h2>Meet Michael Torres, CFP®</h2>
+    <div class="box"><div class="r"><span class="l">Thu, Dec 3</span><span class="v">10:30 AM ✓ booked</span></div></div>
+    <div class="pigbox"><b style="font-size:14px;color:var(--navy)">Help Michael prep for your call</b><div style="font-size:12.5px;color:var(--muted)">Which of these do you have? (tap all that apply)</div>
+      <span class="chip sel">Car loan</span><span class="chip">Car lease</span><span class="chip sel">Student loans</span><span class="chip">Credit card balance</span><span class="chip">Mortgage</span>
+      <div style="font-size:12px;margin-top:6px">"Car loan" → vehicle is <b>financed</b> ${Z}</div></div>
+    <div class="est-badge">🎉 +25 Align Credits for scheduling</div>`;
+  case 'mfl':return `<div class="where">Dashboard · My Financial Life</div><h2>Where your money lives</h2>
+    <div class="tiles"><div class="tile"><b>🏦 My Bank</b>Chase</div><div class="tile"><b>📈 My 401(k)</b>Fidelity</div></div>
+    <div class="pigbox"><b style="color:var(--navy)">🚗 My Auto Insurance: Progressive</b>${Z}
+      ${q('Been with them…',['< 1 yr','1–3 yrs','3–5 yrs','5+ yrs'],'3–5 yrs')}
+      ${q('Renews in…',['Jan','Feb','Mar','…'],'Feb')}<div style="font-size:12px;margin-top:6px;color:var(--muted)">→ insured ✓, carrier ✓, and we nudge her 30 days before renewal</div></div>
+    <div class="pigbox"><b style="color:var(--navy)">🚙 My Car: what's it worth?</b>${Z}
+      <div class="r" style="padding:6px 0"><span class="l">Car</span><span class="v">2020 Honda Civic EX</span></div>
+      <div class="r" style="padding:6px 0"><span class="l">Odometer</span><span class="typed">52,000</span></div>
+      <div style="font-size:15px;font-weight:800;color:var(--green);margin-top:4px">≈ $17,400 added to your net worth</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">52,000 mi ÷ 5.5 yrs → ~9,500 mi/yr (estimated)</div></div>`;
+  case 'z1':return `<div class="where">Dashboard · Your next step</div><h2>Your real rate is one tap away</h2><p class="lead">We pre-filled everything from your profile. Change anything that's off.</p>
+    <div class="box"><div class="box-h"><span>Already on file</span><span>20 of 21</span></div>
+      <div class="r"><span class="l">Driver</span><span class="v">Maya, 29 · F · Single · Bachelor's</span></div>
+      <div class="r"><span class="l">Garaged at</span><span class="v">1402 S Congress Ave</span></div>
+      <div class="r"><span class="l">Car</span><span class="v">2020 Civic EX · financed</span></div>
+      <div class="r"><span class="l">Use</span><span class="v">Commute · ~9,500 mi</span></div>
+      <div class="r"><span class="l">Now with</span><span class="v">Progressive, 3–5 yrs · credit Good</span></div></div>
+    <div class="pigbox" style="border-color:var(--red);background:#fff7f7">${q('Any accidents or tickets in the last 3 years?',['None','1','2+'],'None')}<div style="font-size:11.5px;color:var(--red);margin-top:6px">Always asked, never assumed.</div></div>
+    <span class="btn gold">See my rates →</span>`;
+  case 'z2':return `<div class="where">Dashboard</div><h2>No VIN needed</h2><div class="skip">✓ Skipped. We already have her car from the My Car tile.</div>`;
+  case 'last':return `<div class="where">Dashboard</div><h2>No extra questions</h2><div class="skip">✓ Skipped. All 21 fields were collected along the way.</div>`;
+  }
+  return null;
+}
+
 function render(){
   const st=STAGES[step],s=had(step),m=st[mode];
   document.getElementById('screen').innerHTML=screenHTML();
@@ -289,15 +379,13 @@ function render(){
   document.getElementById('fwd').disabled=step===STAGES.length-1;
 }
 function renderCompare(){
-  const row=(label,fn)=>`<tr><td>${label}</td><td class="num">${fn('F')}</td><td class="num">${fn('N')}</td></tr>`;
+  const row=(label,fn)=>`<tr><td>${label}</td><td class="num">${fn('N')}</td><td class="num">${fn('F')}</td><td class="num" style="color:var(--green)">${fn('P')}</td></tr>`;
   const cnt=(m,id)=>{const save=mode;mode=m;const i=STAGES.findIndex(s=>s.id===id);const n=had(i).size;mode=save;return n+'/21';};
-  const typed=m=>m==='F'?'0':'5 (+ a street address later)';
-  document.getElementById('cmp').innerHTML=`<tr><th>Milestone</th><th>With Finch</th><th>Without Finch</th></tr>`+
-   row('After onboarding (before she ever sees the Zebra card)',m=>cnt(m,'match'))+
+  document.getElementById('cmp').innerHTML=`<tr><th>Milestone</th><th>Without Finch</th><th>With Finch</th><th>Finch + piggybacks ⚡</th></tr>`+
+   row('After onboarding (before anything about car insurance)',m=>cnt(m,'match'))+
    row('After My Financial Life',m=>cnt(m,'mfl'))+
-   row('After the Zebra card as built today',m=>cnt(m,'z2'))+
-   row('New questions still needed to get paid',m=>m==='F'?'2 taps + 2 confirms':'6 questions')+
-   row('Fields Maya types by hand in onboarding (both paths type a VIN later)',typed)+
+   row('Questions on the Zebra card + after',m=>({N:'~11 incl. VIN + typed address',F:'~9 incl. VIN',P:'1 tap (tickets)'}[m]))+
+   row('Fields typed by hand (whole journey)',m=>({N:'5 + VIN + address',F:'VIN only',P:'Odometer only'}[m]))+
    row('Compensation point',()=>'21/21 ✓');
 }
 document.getElementById('fwd').onclick=()=>{if(step<STAGES.length-1){step++;render();}};
