@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Zebra Revenue Lab — AssetAlign</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0D3B66;--navy-mid:#164d82;--yellow:#F4D35E;--yellow-bg:#fefae8;--yellow-dark:#c9a227;--text:#1a2d42;--muted:#6b7c93;--border:#e3e7ec;--bg:#f5f6f8;--green:#2d8a4e;--green-bg:#e8f5ed;--amber:#b7791f;--amber-bg:#fdf3e1;--red:#c53030;--red-bg:#fdecec;--blue:#2b6cb0;--blue-bg:#e8f1fb;--gray-bg:#eef0f3}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+.banner{background:#2a1f00;color:var(--yellow);font-size:13px;text-align:center;padding:7px 16px;font-weight:500}
+header{background:#fff;border-bottom:3px solid var(--navy);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:19px;color:var(--navy)}
+.logo span{color:var(--yellow-dark)}
+.sub{color:var(--muted);font-size:14px}
+.controls{max-width:1280px;margin:18px auto 0;padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
+.panel h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600}
+.personas{display:flex;flex-wrap:wrap;gap:8px}
+.pbtn{border:1.5px solid var(--border);background:#fff;border-radius:10px;padding:8px 11px;cursor:pointer;font:inherit;font-size:13px;text-align:left;line-height:1.25}
+.pbtn b{display:block;font-size:14px;color:var(--navy)}
+.pbtn.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.pbtn.on b{color:var(--yellow)}
+.toggle{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;margin-bottom:8px;cursor:pointer}
+.toggle input{margin-top:3px;accent-color:var(--navy);width:16px;height:16px;flex-shrink:0}
+.toggle small{display:block;color:var(--muted);font-size:12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.seg button{font:inherit;font-size:12.5px;border:1.5px solid var(--border);background:#fff;border-radius:999px;padding:5px 11px;cursor:pointer}
+.seg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.main{max-width:1280px;margin:14px auto;padding:0 16px;display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:16px;align-items:start}
+/* phone */
+.phone{background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 8px 30px rgba(13,59,102,.08);overflow:hidden;position:sticky;top:12px}
+.phone-top{background:var(--navy);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.phone-top .cr{background:var(--yellow);color:var(--navy);font-weight:700;border-radius:999px;padding:3px 10px;font-size:12px}
+.screen{padding:20px 18px 22px;min-height:470px}
+.step-ind{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.screen h2{font-size:21px;color:var(--navy);line-height:1.2;margin-bottom:8px}
+.screen p.lead{color:var(--muted);font-size:14px;margin-bottom:14px}
+.chips{display:flex;flex-direction:column;gap:8px}
+.chip{font:inherit;font-size:15px;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;background:#fff;text-align:left;cursor:pointer;transition:all .12s}
+.chip:hover{border-color:var(--navy)}
+.chip.sel{border-color:var(--navy);background:var(--navy);color:#fff}
+.chips.row{flex-direction:row;flex-wrap:wrap}
+.chips.row .chip{padding:9px 12px;font-size:14px}
+.btn{font:inherit;font-weight:600;font-size:15px;border:none;border-radius:12px;padding:13px 18px;cursor:pointer;width:100%;margin-top:14px;background:var(--navy);color:#fff}
+.btn.gold{background:var(--yellow);color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--border)}
+.card-z{border:1px solid var(--border);border-radius:16px;padding:16px;background:linear-gradient(180deg,#fff, #fbfcfe)}
+.card-z .tag{font-size:11px;font-weight:700;letter-spacing:.07em;color:var(--yellow-dark);text-transform:uppercase}
+.est{font-size:34px;font-weight:800;color:var(--navy);margin:6px 0 2px}
+.est small{font-size:15px;font-weight:500;color:var(--muted)}
+.earn{display:inline-block;margin-top:10px;font-size:12.5px;background:var(--yellow-bg);border:1px solid #f3e3a0;border-radius:999px;padding:4px 10px;color:#7a5d00}
+label.f{display:block;font-size:12.5px;color:var(--muted);margin:10px 0 4px}
+select,input[type=text]{font:inherit;font-size:15px;width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--text)}
+.rv{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.rv-h{background:var(--gray-bg);font-size:12px;font-weight:600;color:var(--muted);padding:6px 12px;text-transform:uppercase;letter-spacing:.06em}
+.rv-r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--border);font-size:14px}
+.rv-r:first-of-type{border-top:none}
+.rv-r .l{color:var(--muted);font-size:13px;flex-shrink:0}
+.rv-r .v{text-align:right;font-weight:500}
+.rv-r select{width:auto;max-width:190px;padding:5px 8px;font-size:13.5px}
+.src{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 7px;margin-left:6px;white-space:nowrap;vertical-align:1px}
+.s-auto{background:var(--blue-bg);color:var(--blue)}
+.s-der{background:#ede9fb;color:#5a3fb5}
+.s-ans{background:var(--green-bg);color:var(--green)}
+.s-asm{background:var(--amber-bg);color:var(--amber)}
+.s-na{background:var(--gray-bg);color:var(--muted)}
+.s-miss{background:var(--red-bg);color:var(--red)}
+.consent-box{border:1px solid var(--border);border-radius:12px;padding:12px;font-size:13px;color:var(--muted);margin-top:8px}
+.consent-box label{display:flex;gap:9px;align-items:flex-start;color:var(--text);font-size:14px;margin-bottom:8px;cursor:pointer}
+.consent-box input{margin-top:3px;width:17px;height:17px;accent-color:var(--navy);flex-shrink:0}
+.fine{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.4}
+.paybtn{font:inherit;font-weight:800;font-size:22px;width:100%;padding:22px;border-radius:16px;border:none;cursor:pointer;background:linear-gradient(135deg,#2d8a4e,#1f6b3a);color:#fff;box-shadow:0 8px 24px rgba(45,138,78,.35);margin-top:16px;letter-spacing:.01em}
+.paybtn:disabled{background:#cfd5dc;box-shadow:none;cursor:not-allowed;color:#fff}
+.upload{border:2px dashed var(--border);border-radius:14px;padding:26px;text-align:center;color:var(--muted);cursor:pointer;font-size:14px}
+.upload:hover{border-color:var(--navy);color:var(--navy)}
+.upload .ic{font-size:34px;display:block;margin-bottom:6px}
+.playbar{display:flex;gap:8px;padding:10px 18px;border-top:1px solid var(--border);background:#fafbfc}
+.playbar button{font:inherit;font-size:13px;border-radius:9px;padding:8px 10px;cursor:pointer;flex:1;border:1.5px solid var(--border);background:#fff;color:var(--navy);font-weight:600}
+.playbar button.pri{background:var(--yellow);border-color:var(--yellow)}
+/* meter */
+.meter-top{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.big{font-size:44px;font-weight:800;color:var(--navy);line-height:1}
+.big small{font-size:18px;color:var(--muted);font-weight:600}
+.bar{height:12px;border-radius:999px;background:var(--gray-bg);overflow:hidden;display:flex;flex:1;min-width:200px}
+.bar div{height:100%;transition:width .35s}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.stat{background:var(--gray-bg);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:22px;color:var(--navy)}
+.stat span{font-size:12px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+table.fl{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px}
+table.fl th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border)}
+table.fl td{padding:7px 8px;border-bottom:1px solid #f0f2f5;vertical-align:top}
+table.fl td.k{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--navy)}
+table.fl td.val{color:var(--text);max-width:220px;overflow-wrap:anywhere}
+.consent-row{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:13.5px}
+.strategy{max-width:1280px;margin:8px auto 40px;padding:0 16px}
+.strategy h2{font-size:22px;color:var(--navy);margin:22px 0 4px}
+.strategy>p{color:var(--muted);margin-bottom:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sc{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;font-size:14px}
+.sc h4{font-size:15.5px;color:var(--navy);margin-bottom:6px}
+.sc ul{padding-left:18px;margin-top:6px}
+.sc li{margin-bottom:5px}
+.sc .pill{display:inline-block;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;margin-bottom:8px}
+.go{background:var(--green-bg);color:var(--green)}.warn{background:var(--amber-bg);color:var(--amber)}.stop{background:var(--red-bg);color:var(--red)}
+.qs ol{padding-left:20px}.qs li{margin-bottom:7px}
+.modal-bg{position:fixed;inset:0;background:rgba(10,25,45,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:24px}
+.modal h2{color:var(--green);font-size:26px}
+pre{background:#0f1e30;color:#cfe3ff;border-radius:12px;padding:14px;font-size:12px;overflow:auto;margin-top:12px;max-height:340px}
+@media (max-width:960px){.controls,.main{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.phone{position:static}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="banner">INTERNAL TEST SITE · synthetic personas only · nothing is sent to The Zebra</div>
+<header>
+  <div class="logo">Asset<span>Align</span> × The Zebra</div>
+  <div class="sub">Revenue Lab — how fast can a member get from dashboard to <b>compensation point</b>?</div><a href="./" style="margin-left:auto;font-size:14px;color:var(--navy);font-weight:600">← Maya's real journey</a>
+</header>
+
+<div class="controls">
+  <div class="panel">
+    <h3>1 · Pick a synthetic persona</h3>
+    <div class="personas" id="personas"></div>
+  </div>
+  <div class="panel">
+    <h3>2 · Accelerators to test</h3>
+    <label class="toggle"><input type="checkbox" id="optFinch" checked><span>Use the full payroll record (Finch)<small>Gender + full home street address come straight from payroll. Today the prototype only uses state + ZIP.</small></span></label>
+    <label class="toggle"><input type="checkbox" id="optCommute" checked><span>Estimate mileage + primary use from the commute<small>Home address vs. work location from payroll. The member only fixes it if it's wrong.</small></span></label>
+    <label class="toggle"><input type="checkbox" id="optDec"><span>"Snap your insurance card" (Vault document reading)<small>One photo gives us year, make, model, trim and insured status, plus owned/financed (from the lienholder). Only works if they're insured today.</small></span></label>
+    <label class="toggle"><input type="checkbox" id="optPrefill"><span>Pre-answer everything ("negative consent" answers)<small>We pick the most likely answer and the member changes anything that's wrong. Fields nobody touched are flagged amber.</small></span></label>
+    <div style="font-size:13.5px;margin-top:6px">Consent style:</div>
+    <div class="seg" id="consentSeg">
+      <button data-m="button" class="on">One-tap button (recommended)</button>
+      <button data-m="optin">Opt-in checkboxes</button>
+      <button data-m="precheck">Pre-checked (negative consent)</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="phone">
+    <div class="phone-top"><span id="hello">Hi</span><span class="cr" id="credits">25 Align Credits</span></div>
+    <div class="screen" id="screen"></div>
+    <div class="playbar">
+      <button class="pri" id="playBtn">▶ Play as persona</button>
+      <button id="resetBtn">↺ Restart</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Compensation meter · The Zebra's 21 "Absolutely Required" RC1 fields</h3>
+    <div class="meter-top">
+      <div class="big" id="bigNum">0<small>/21</small></div>
+      <div class="bar" id="bar"></div>
+    </div>
+    <div class="legend">
+      <span class="src s-auto">Already have: payroll / onboarding</span>
+      <span class="src s-der">Estimated by us</span>
+      <span class="src s-ans">Member answered</span>
+      <span class="src s-asm">Defaulted, not confirmed</span>
+      <span class="src s-na">Not required in this state</span>
+      <span class="src s-miss">Still missing</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="stQ">0</b><span>questions the member sees</span></div>
+      <div class="stat"><b id="stT">0</b><span>taps so far</span></div>
+      <div class="stat"><b id="stS">0s</b><span>est. member time (~3s/tap)</span></div>
+      <div class="stat"><b id="stA">0</b><span>defaulted fields (risk)</span></div>
+    </div>
+    <div class="consent-row" id="consentRow"></div>
+    <table class="fl"><thead><tr><th>Zebra field</th><th>Value</th><th>Where it comes from</th></tr></thead><tbody id="fieldRows"></tbody></table>
+  </div>
+</div>
+
+<div class="strategy">
+  <h2>How to get to revenue faster</h2>
+  <p>What this lab shows, plus where the lines are on synthetic personas and negative consent.</p>
+  <div class="grid3">
+    <div class="sc"><span class="pill go">Do now · free fields</span><h4>We already have about 10 of the 21</h4>
+      Name, email, DOB, state and ZIP come from payroll. Marital status and own/rent come from onboarding. <b>Gender and the full garaging address are also in Finch's <code>/individual</code> record</b>; we just don't use them yet. Switching that on adds 2 fields with zero extra questions.
+    </div>
+    <div class="sc"><span class="pill go">Do now · estimate, then confirm</span><h4>Mileage + primary use from the commute</h4>
+      Home address vs. work location gives a solid annual-mileage estimate (commute × 2 × workdays + ~5,000 personal miles), and "commute" vs. "pleasure" follows from remote/on-site status. The member sees it already filled in and only touches it if it's wrong. That turns 2 questions into 0.
+    </div>
+    <div class="sc"><span class="pill go">Big unlock · build next</span><h4>"Snap your insurance card"</h4>
+      The car is the one thing nothing can derive. A photo of the ID card or declarations page gives us year, make, model, trim/VIN, insured status, and owned/financed (from the lienholder). The Vault already does document reading (pdf.js + Tesseract). Turn it on above and watch the car questions go away.
+    </div>
+    <div class="sc"><span class="pill warn">Use with care</span><h4>"Negative consent" for <i>answers</i>: yes, mostly</h4>
+      Pre-filling answers the member can change is a normal, legitimate pattern, and it's the fastest version of this flow. Two limits:
+      <ul><li><b>Never default the driving record (violations).</b> If we send "no tickets" and they have one, the rate jumps when they buy, they don't convert, and our payout is at risk. It's also misrepresentation on an insurance application.</li>
+      <li>Education and credit defaults are lower risk but still change the rate. The lab flags anything untouched in amber so you can see how much of the record is "assumed."</li></ul>
+    </div>
+    <div class="sc"><span class="pill stop">Don't ship</span><h4>Negative consent for <i>sharing / contact</i>: no</h4>
+      Pre-checked "share my info / OK to call me" boxes generally don't count as valid consent. TCPA calls and texts need an affirmative act, and state privacy rules plus the FTC treat pre-checked boxes as a dark pattern. Weak consent also undermines the lead Zebra is paying for.
+      <br><br><b>Same speed, real consent:</b> the button the member already has to tap ("Get my quotes") <i>is</i> the consent, with the disclosure right next to it. That's the "One-tap button" mode above, and it costs zero extra taps. Have counsel check the final wording.
+    </div>
+    <div class="sc"><span class="pill warn">Test only</span><h4>Synthetic personas: great for testing, never for production</h4>
+      <ul><li><b>Yes:</b> clicking through, demoing to Fritz, and sending the 5 personas through Zebra's <b>QA/UAT environment</b> (Fritz confirmed there's a separate token per environment) to prove all 21 fields round-trip and attribution shows up.</li>
+      <li><b>Never:</b> submitting synthetic people to production. That's a fabricated lead: clawbacks, a terminated contract, and possible fraud exposure.</li></ul>
+    </div>
+  </div>
+
+  <div class="sc qs" style="margin-top:14px">
+    <h4>Questions to send Fritz (these decide where the "we get paid" button actually sits)</h4>
+    <ol>
+      <li><b>What exact event triggers our compensation</b>: the prepop hand-off, the member viewing quotes, a carrier click, or a bind? How much per event?</li>
+      <li><b>Does <code>/api/ext/v1/prepop/</code> accept all 21 RC1 fields?</b> Eric was told there's no <code>user_responses</code> structure, and today we only send first/last/email/phone/state. We need the full accepted field list.</li>
+      <li><b>Gender:</b> can we send "unspecified" or omit it in states that ban gender rating (CA, HI, MA, MI, MT, NC, PA), or for members whose payroll record says "decline to specify"?</li>
+      <li><b>Credit:</b> you said it isn't required in CA/HI/MA. Does a lead without it still count as "complete" there? Is the ballpark range we collect enough everywhere else?</li>
+      <li><b>Is a pre-filled answer the member reviewed treated the same as one they typed?</b></li>
+      <li>Can we run synthetic test personas through QA, and will those show up in attribution/commission reporting so we can verify tracking end to end?</li>
+    </ol>
+  </div>
+</div>
+
+<div class="modal-bg" id="modal"><div class="modal">
+  <h2>💰 Compensation point reached</h2>
+  <p style="margin-top:6px;color:var(--muted)" id="mSummary"></p>
+  <pre id="mPayload"></pre>
+  <p class="fine">Nothing was sent. In production this is the hand-off: POST to Zebra's prepop endpoint, which returns a location link (expires in 10 min), and the member lands on Zebra's results. What happens after that is Zebra's model.</p>
+  <button class="btn" onclick="document.getElementById('modal').classList.remove('show')">Close</button>
+</div></div>
+
+<script>
+const CARS={
+  Honda:{Civic:['LX','Sport','EX','Touring'],Accord:['LX','Sport','EX-L','Touring'],'CR-V':['LX','EX','EX-L','Touring']},
+  Toyota:{Camry:['LE','SE','XLE','XSE'],Corolla:['L','LE','SE','XSE'],RAV4:['LE','XLE','XLE Premium','Limited']},
+  Ford:{'F-150':['XL','XLT','Lariat','Platinum'],Escape:['S','SE','SEL','Titanium']},
+  Nissan:{Altima:['2.5 S','2.5 SV','2.5 SR','2.5 SL'],Rogue:['S','SV','SL','Platinum']},
+  Lexus:{'RX 350':['Base','Premium','F Sport','Luxury']},
+  Chevrolet:{Equinox:['LS','LT','RS','Premier'],Silverado:['WT','Custom','LT','RST']},
+  Tesla:{'Model 3':['Standard','Long Range','Performance'],'Model Y':['Standard','Long Range','Performance']},
+  Subaru:{Outback:['Base','Premium','Limited','Touring']},
+  Hyundai:{Tucson:['SE','SEL','N Line','Limited']}
+};
+const YEARS=[];for(let y=2026;y>=2008;y--)YEARS.push(String(y));
+const EXEMPT_CREDIT=['CA','HI','MA'];
+
+const PERSONAS={
+  maya:{tag:'29 · Austin TX · renter',pay:{first:'Maya',last:'Chen',email:'maya.chen@example.com',dob:'1997-03-14',gender:'Female',street:'1402 S Congress Ave',city:'Austin',state:'TX',zip:'78704',commute:9,mode:'On-site'},ob:{marital:'Single',residence:'Rent'},
+    truth:{currently_insured:'Yes',year:'2020',make:'Honda',model:'Civic',submodel:'EX',ownership:'Financed',credit_score:'Good (670–739)',education:"Bachelor's",violations:'None',gender:'Female'}},
+  marcus:{tag:'44 · Columbus OH · homeowner',pay:{first:'Marcus',last:'Reed',email:'marcus.reed@example.com',dob:'1982-07-02',gender:'Male',street:'88 Maple Ridge Dr',city:'Columbus',state:'OH',zip:'43230',commute:18,mode:'On-site'},ob:{marital:'Married',residence:'Own'},
+    truth:{currently_insured:'Yes',year:'2022',make:'Ford',model:'F-150',submodel:'XLT',ownership:'Financed',credit_score:'Excellent (740+)',education:"Bachelor's",violations:'1',gender:'Male'}},
+  priya:{tag:'36 · Worcester MA · hybrid',pay:{first:'Priya',last:'Natarajan',email:'priya.n@example.com',dob:'1990-11-21',gender:'Female',street:'17 Elm Park Rd',city:'Worcester',state:'MA',zip:'01609',commute:22,mode:'Hybrid'},ob:{marital:'Married',residence:'Own'},
+    truth:{currently_insured:'Yes',year:'2019',make:'Toyota',model:'RAV4',submodel:'LE',ownership:'Owned',credit_score:'Good (670–739)',education:"Master's",violations:'None',gender:'Female'}},
+  jordan:{tag:'24 · Phoenix AZ · uninsured',pay:{first:'Jordan',last:'Alvarez',email:'jordan.alvarez@example.com',dob:'2002-05-09',gender:null,street:'3100 E Thomas Rd Apt 214',city:'Phoenix',state:'AZ',zip:'85008',commute:14,mode:'On-site'},ob:{marital:'Single',residence:'Rent'},
+    truth:{currently_insured:'No',year:'2016',make:'Nissan',model:'Altima',submodel:'2.5 S',ownership:'Owned',credit_score:'Fair (580–669)',education:"Associate's",violations:'None',gender:'Male'}},
+  linda:{tag:'58 · Charlotte NC · remote',pay:{first:'Linda',last:'Okafor',email:'linda.okafor@example.com',dob:'1968-01-30',gender:'Female',street:'9 Ballantyne Commons Pkwy',city:'Charlotte',state:'NC',zip:'28277',commute:0,mode:'Remote'},ob:{marital:'Widowed',residence:'Own'},
+    truth:{currently_insured:'Yes',year:'2023',make:'Lexus',model:'RX 350',submodel:'Premium',ownership:'Leased',credit_score:'Excellent (740+)',education:"Master's",violations:'None',gender:'Female'}}
+};
+
+const Q={
+  currently_insured:{q:'Do you have car insurance right now?',opts:['Yes','No'],guess:'Yes'},
+  submodel:{q:'Which version is it?',opts:()=>trimsFor(),guess:()=>trimsFor()[0]},
+  ownership:{q:'Do you own, finance, or lease it?',opts:['Owned','Financed','Leased'],guess:'Financed'},
+  credit_score:{q:'Ballpark credit? (no credit check)',opts:['Excellent (740+)','Good (670–739)','Fair (580–669)','Poor (under 580)','Not sure'],guess:'Good (670–739)'},
+  education:{q:'Highest level of school you finished?',opts:['High school','Some college',"Associate's","Bachelor's","Master's",'Doctorate'],guess:"Bachelor's"},
+  violations:{q:'Any accidents or tickets in the last 3 years?',opts:['None','1','2 or more'],guess:'None'},
+  gender:{q:'Gender, as listed on your license?',opts:['Female','Male','Non-binary / X'],guess:null},
+  primary_use:{q:'Mostly used for…',opts:['Commute','Pleasure','Business'],guess:null},
+  annual_mileage:{q:'Roughly how many miles a year?',opts:['5000','7500','10000','12500','15000','20000'],guess:null}
+};
+
+const FIELDS=['state','zipcode','currently_insured','credit_score','date_of_birth','education','email','first_name','gender','last_name','marital_status','residence_ownership','violations','annual_mileage','garaging_address','make','model','ownership','primary_use','submodel','year'];
+
+let S;
+function freshState(pid){
+  return {pid:pid||(S&&S.pid)||'maya',A:{},D:{},doc:false,taps:0,step:0,screens:[],consent:false,consentChecks:{share:false,contact:false},paid:false,
+    opts:S?S.opts:{finch:true,commute:true,dec:false,prefill:false,consent:'button'}};
+}
+S=freshState('maya');
+const P=()=>PERSONAS[S.pid];
+function trimsFor(){const c=carVal();return (CARS[c.make]&&CARS[c.make][c.model])||['Base','Mid','Top trim'];}
+function carVal(){if(S.doc){const t=P().truth;return{year:t.year,make:t.make,model:t.model};}return{year:S.A.year,make:S.A.make,model:S.A.model};}
+function docOK(){return S.opts.dec&&P().truth.currently_insured==='Yes';}
+function mileageEst(){const p=P().pay;const days=p.mode==='On-site'?240:p.mode==='Hybrid'?144:0;return Math.round((p.commute*2*days+5000)/500)*500;}
+function useEst(){return P().pay.commute>0&&P().pay.mode!=='Remote'?'Commute':'Pleasure';}
+function needsGenderQ(){return !(S.opts.finch&&P().pay.gender);}
+function creditExempt(){return EXEMPT_CREDIT.includes(P().pay.state);}
+
+function resolve(k){
+  const p=P().pay,o=P().ob,A=S.A,D=S.D,t=P().truth;
+  const auto=(v,src)=>({v,cls:'s-auto',src});
+  switch(k){
+    case 'first_name':return auto(p.first,'Payroll (Finch)');
+    case 'last_name':return auto(p.last,'Payroll (Finch)');
+    case 'email':return auto(p.email,'Payroll (Finch)');
+    case 'date_of_birth':return auto(p.dob,'Payroll (Finch)');
+    case 'state':return auto(p.state,'Payroll (Finch)');
+    case 'zipcode':return auto(p.zip,'Payroll (Finch)');
+    case 'marital_status':return auto(o.marital,'Onboarding Q');
+    case 'residence_ownership':return auto(o.residence,'Onboarding Q');
+    case 'gender':
+      if(!needsGenderQ())return auto(p.gender,'Payroll (Finch)');
+      if(A.gender)return{v:A.gender,cls:'s-ans',src:'Member'};
+      return{v:'—',cls:'s-miss',src:S.opts.finch?'Payroll says "decline to specify", so we have to ask':'Ask (or turn on full payroll record)'};
+    case 'garaging_address':
+      if(S.opts.finch)return auto(`${p.street}, ${p.city}, ${p.state} ${p.zip}`,'Payroll home address');
+      if(A.garaging_address)return{v:A.garaging_address,cls:'s-ans',src:'Member typed'};
+      return{v:'—',cls:'s-miss',src:'Only state+ZIP used today'};
+    case 'annual_mileage':
+      if(A.annual_mileage)return{v:Number(A.annual_mileage).toLocaleString(),cls:'s-ans',src:'Member'};
+      if(S.opts.commute)return{v:mileageEst().toLocaleString()+' (est.)',cls:'s-der',src:`${p.commute} mi commute · ${p.mode}`};
+      return{v:'—',cls:'s-miss',src:'Not collected today'};
+    case 'primary_use':
+      if(A.primary_use)return{v:A.primary_use,cls:'s-ans',src:'Member'};
+      if(S.opts.commute)return{v:useEst()+' (est.)',cls:'s-der',src:`Payroll work mode: ${p.mode}`};
+      return{v:'—',cls:'s-miss',src:'Not collected today'};
+    case 'year':case 'make':case 'model':
+      if(S.doc)return{v:t[k],cls:'s-ans',src:'Insurance card photo'};
+      if(A[k])return{v:A[k],cls:'s-ans',src:'Member'};
+      return{v:'—',cls:'s-miss',src:'Ask (nothing can derive the car)'};
+    case 'credit_score':
+      if(creditExempt())return{v:'n/a',cls:'s-na',src:`Not required in ${p.state} (per Fritz)`};
+    // falls through
+    default:
+      if(S.doc&&(k==='submodel'||k==='currently_insured'||k==='ownership'))return{v:t[k],cls:'s-ans',src:k==='ownership'?'Card photo (lienholder)':'Insurance card photo'};
+      if(A[k])return{v:A[k],cls:'s-ans',src:'Member'};
+      if(D[k])return{v:D[k],cls:'s-asm',src:'Defaulted, member didn\'t change it'};
+      return{v:'—',cls:'s-miss',src:'Ask'};
+  }
+}
+
+/* -------- screens -------- */
+function questionKeys(){
+  const ks=[];
+  if(!S.doc){ks.push('currently_insured');}
+  if(!S.doc)ks.push('submodel','ownership');
+  if(!creditExempt())ks.push('credit_score');
+  ks.push('education','violations');
+  if(needsGenderQ())ks.push('gender');
+  return ks;
+}
+function buildScreens(){
+  const sc=['dash'];
+  sc.push(docOK()?'doc':'car');
+  sc.push('review');
+  questionKeys().forEach(k=>{ if(!(S.opts.prefill&&guessOf(k)))sc.push('q:'+k); });
+  if(!S.opts.finch)sc.push('garage');
+  if(!S.opts.commute)sc.push('usage');
+  sc.push('consent','pay');
+  S.screens=sc;
+}
+function guessOf(k){const g=Q[k]&&Q[k].guess;return typeof g==='function'?g():g;}
+function optsOf(k){const o=Q[k].opts;return typeof o==='function'?o():o;}
+function memberQuestionCount(){return S.screens.filter(s=>s==='car'||s==='doc'||s.startsWith('q:')||s==='garage'||s==='usage').length + (S.opts.prefill?1:0);}
+
+function tap(){S.taps++;}
+function next(){S.step=Math.min(S.step+1,S.screens.length-1);render();}
+
+function render(){
+  const p=P().pay;
+  document.getElementById('hello').textContent='Hi '+p.first+' 👋';
+  document.getElementById('credits').textContent=(S.paid?35:25)+' Align Credits';
+  const el=document.getElementById('screen');
+  const cur=S.screens[S.step];
+  const qn=S.screens.filter(s=>s!=='dash'&&s!=='pay');
+  const idx=qn.indexOf(cur);
+  const ind=idx>=0?`<div class="step-ind">Step ${idx+1} of ${qn.length}</div>`:'';
+  let h='';
+  if(cur==='dash'){
+    h=`<div class="card-z"><div class="tag">Your next step · Car insurance</div>
+      <h2 style="margin-top:6px">Think you're paying more than this?</h2>
+      <div class="est">~$148<small>/mo</small></div>
+      <div style="font-size:13px;color:var(--muted)">What drivers like you in ${p.city} typically pay. Zebra estimate, illustrative.</div>
+      <p style="font-size:14px;margin-top:10px">The Zebra compares 100+ carriers. We've already filled in most of it from your profile.</p>
+      <span class="earn">+10 Align Credits for requoting</span>
+      <button class="btn gold" data-act="start">Check my rate →</button></div>`;
+  }else if(cur==='doc'){
+    h=`${ind}<h2>Snap your insurance card</h2><p class="lead">One photo of your ID card or declarations page and we'll read the car details for you.</p>
+      <div class="upload" data-act="upload"><span class="ic">📷</span>Tap to take a photo or upload</div>
+      <button class="btn ghost" data-act="nodoc">I'll type it instead</button>`;
+  }else if(cur==='car'){
+    const c=carVal();const makes=Object.keys(CARS);const models=c.make?Object.keys(CARS[c.make]):[];
+    h=`${ind}<h2>What do you drive?</h2><p class="lead">This is the one thing we can't fill in for you.</p>
+      <label class="f">Year</label><select id="cYear"><option value="">Select…</option>${YEARS.map(y=>`<option ${c.year===y?'selected':''}>${y}</option>`).join('')}</select>
+      <label class="f">Make</label><select id="cMake"><option value="">Select…</option>${makes.map(m=>`<option ${c.make===m?'selected':''}>${m}</option>`).join('')}</select>
+      <label class="f">Model</label><select id="cModel" ${c.make?'':'disabled'}><option value="">Select…</option>${models.map(m=>`<option ${c.model===m?'selected':''}>${m}</option>`).join('')}</select>
+      <button class="btn" data-act="carNext" ${c.year&&c.make&&c.model?'':'disabled'}>Next →</button>`;
+  }else if(cur==='review'){
+    h=`${ind}<h2>Here's what we already have</h2><p class="lead">${S.opts.prefill?'We filled in our best guess for the rest. Change anything that\'s wrong.':'Pulled from your payroll profile and onboarding. Nothing to type.'}</p>`;
+    const row=(l,k)=>{const r=resolve(k);return `<div class="rv-r"><span class="l">${l}</span><span class="v">${esc(r.v)}<span class="src ${r.cls}">${r.cls==='s-auto'?'on file':r.cls==='s-der'?'estimated':r.cls==='s-ans'?'yours':r.cls==='s-asm'?'guess':''}</span></span></div>`;};
+    h+=`<div class="rv"><div class="rv-h">You</div>${row('Name','first_name').replace(esc(p.first),esc(p.first+' '+p.last))}${row('Date of birth','date_of_birth')}${!needsGenderQ()?row('Gender','gender'):''}${row('Marital status','marital_status')}${row('Email','email')}</div>`;
+    h+=`<div class="rv"><div class="rv-h">Home</div>${S.opts.finch?row('Car kept at','garaging_address'):row('ZIP','zipcode')}${row('Own or rent','residence_ownership')}</div>`;
+    const c=carVal();
+    let car=`<div class="rv"><div class="rv-h">Car</div><div class="rv-r"><span class="l">Vehicle</span><span class="v">${esc(c.year+' '+c.make+' '+c.model)}${S.doc?' '+esc(P().truth.submodel):''}<span class="src s-ans">yours</span></span></div>`;
+    if(S.opts.commute){
+      car+=`<div class="rv-r"><span class="l">Miles / year</span><span class="v"><select data-edit="annual_mileage">${mileageOpts().map(m=>`<option value="${m}" ${String(S.A.annual_mileage||mileageEst())===String(m)?'selected':''}>${Number(m).toLocaleString()}</option>`).join('')}</select><span class="src ${resolve('annual_mileage').cls}">${S.A.annual_mileage?'yours':'estimated'}</span></span></div>`;
+      car+=`<div class="rv-r"><span class="l">Mostly used for</span><span class="v"><select data-edit="primary_use">${Q.primary_use.opts.map(o=>`<option ${(S.A.primary_use||useEst())===o?'selected':''}>${o}</option>`).join('')}</select><span class="src ${resolve('primary_use').cls}">${S.A.primary_use?'yours':'estimated'}</span></span></div>`;
+    }
+    car+='</div>';h+=car;
+    if(S.opts.prefill){
+      const pk=questionKeys().filter(k=>guessOf(k));
+      if(pk.length){h+=`<div class="rv"><div class="rv-h">Our best guesses: check these</div>`;
+        pk.forEach(k=>{const val=S.A[k]||S.D[k];h+=`<div class="rv-r"><span class="l">${Q[k].q.replace(/\?.*$/,'?')}</span><span class="v"><select data-edit="${k}">${optsOf(k).map(o=>`<option ${val===o?'selected':''}>${o}</option>`).join('')}</select><span class="src ${S.A[k]?'s-ans':'s-asm'}">${S.A[k]?'yours':'guess'}</span></span></div>`;});
+        h+='</div>';}
+    }
+    h+=`<button class="btn" data-act="next">Looks right →</button>`;
+  }else if(cur.startsWith('q:')){
+    const k=cur.slice(2);const qq=Q[k];
+    h=`${ind}<h2>${k==='submodel'?'Which '+esc(carVal().make+' '+carVal().model)+'?':qq.q}</h2><p class="lead">${k==='violations'?'Be honest here. Your quote is only real if this is accurate.':k==='credit_score'?'A ballpark is all The Zebra needs. Nothing touches your credit.':'One tap.'}</p>
+      <div class="chips">${optsOf(k).map(o=>`<button class="chip ${S.A[k]===o?'sel':''}" data-ans="${k}" data-val="${esc(o)}">${esc(o)}</button>`).join('')}</div>`;
+  }else if(cur==='garage'){
+    h=`${ind}<h2>Where is the car parked overnight?</h2><p class="lead">Street address. (With the full payroll record turned on, we'd already have this.)</p>
+      <input type="text" id="garIn" placeholder="Street, city, state ZIP" value="${esc(S.A.garaging_address||'')}"><button class="btn" data-act="garNext">Next →</button>`;
+  }else if(cur==='usage'){
+    h=`${ind}<h2>How do you use it?</h2><label class="f">Mostly for</label><div class="chips row">${Q.primary_use.opts.map(o=>`<button class="chip ${S.A.primary_use===o?'sel':''}" data-pick="primary_use" data-val="${o}">${o}</button>`).join('')}</div>
+      <label class="f">Miles per year</label><div class="chips row">${Q.annual_mileage.opts.map(o=>`<button class="chip ${S.A.annual_mileage===o?'sel':''}" data-pick="annual_mileage" data-val="${o}">${Number(o).toLocaleString()}</button>`).join('')}</div>
+      <button class="btn" data-act="next" ${S.A.primary_use&&S.A.annual_mileage?'':'disabled'}>Next →</button>`;
+  }else if(cur==='consent'){
+    const m=S.opts.consent;
+    h=`${ind}<h2>Ready to see your real rates</h2><p class="lead">We'll send your details to The Zebra so they can pull quotes from 100+ carriers.</p>`;
+    if(m==='button'){
+      h+=`<button class="btn gold" data-act="consentBtn">Get my quotes →</button>
+        <p class="fine">By tapping "Get my quotes," you agree that AssetAlign may share the details above with The Zebra to get you insurance quotes, and that The Zebra and its partners may contact you about them by email, phone or text (including automated means) at the info provided. Consent isn't required to buy. <i>(Draft disclosure, needs counsel review.)</i></p>`;
+    }else{
+      const pre=m==='precheck';
+      if(pre&&!S._preInit){S.consentChecks={share:true,contact:true};S._preInit=true;}
+      h+=`<div class="consent-box">
+        <label><input type="checkbox" data-cc="share" ${S.consentChecks.share?'checked':''}> Share my details with The Zebra to get quotes</label>
+        <label><input type="checkbox" data-cc="contact" ${S.consentChecks.contact?'checked':''}> The Zebra and its partners may call, text or email me about quotes</label></div>
+        <button class="btn" data-act="consentNext" ${S.consentChecks.share?'':'disabled'}>Continue →</button>`;
+    }
+  }else if(cur==='pay'){
+    const done=countFilled();
+    const ok=done.filled===21&&S.consent;
+    h=`<h2>${ok?'Everything Zebra needs ✓':'Almost there'}</h2><p class="lead">${ok?`All 21 required fields captured in ${S.taps} taps.`:`${21-done.filled} required field(s) still missing.`}</p>
+      ${done.assumed?`<div class="consent-row" style="background:var(--amber-bg);color:var(--amber)">⚠ ${done.assumed} field(s) are our defaults, not the member's answers.</div>`:''}
+      <button class="paybtn" data-act="pay" ${ok?'':'disabled'}>💰 WE GET PAID</button>
+      <p class="fine">Beyond this point it's The Zebra's experience and monetization, not ours.</p>`;
+  }
+  el.innerHTML=h;
+  renderMeter();
+}
+function mileageOpts(){const s=new Set(Q.annual_mileage.opts.concat([String(mileageEst())]));return [...s].map(Number).sort((a,b)=>a-b).map(String);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function countFilled(){let filled=0,assumed=0;const by={};FIELDS.forEach(k=>{const r=resolve(k);by[r.cls]=(by[r.cls]||0)+1;if(r.cls!=='s-miss')filled++;if(r.cls==='s-asm')assumed++;});return{filled,assumed,by};}
+
+function renderMeter(){
+  const c=countFilled();
+  document.getElementById('bigNum').innerHTML=c.filled+'<small>/21</small>';
+  const col={'s-auto':'#2b6cb0','s-der':'#7c5fd6','s-ans':'#2d8a4e','s-asm':'#d69e2e','s-na':'#a0aab5'};
+  document.getElementById('bar').innerHTML=Object.keys(col).map(k=>`<div style="width:${(c.by[k]||0)/21*100}%;background:${col[k]}" title="${k}"></div>`).join('');
+  document.getElementById('stQ').textContent=memberQuestionCount();
+  document.getElementById('stT').textContent=S.taps;
+  document.getElementById('stS').textContent=(S.taps*3)+'s';
+  document.getElementById('stA').textContent=c.assumed;
+  const order={'s-miss':0,'s-asm':1,'s-ans':2,'s-der':3,'s-auto':4,'s-na':5};
+  const rows=FIELDS.map(k=>({k,...resolve(k)})).sort((a,b)=>order[a.cls]-order[b.cls]);
+  document.getElementById('fieldRows').innerHTML=rows.map(r=>`<tr><td class="k">${r.k}</td><td class="val">${esc(r.v)}</td><td><span class="src ${r.cls}" style="margin:0">${esc(r.src)}</span></td></tr>`).join('');
+  const cr=document.getElementById('consentRow');const m=S.opts.consent;
+  if(!S.consent){cr.style.cssText='background:var(--gray-bg);color:var(--muted)';cr.textContent='Consent: not yet given';}
+  else if(m==='precheck'&&!S._consentTouched){cr.style.cssText='background:var(--red-bg);color:var(--red)';cr.innerHTML='<b>Consent: pre-checked boxes.</b> The member never actively agreed, so this likely isn\'t valid consent to share or contact. The lead is at risk.';}
+  else{cr.style.cssText='background:var(--green-bg);color:var(--green)';cr.innerHTML='<b>Consent: affirmative.</b> '+(m==='button'?'The tap on "Get my quotes" is the consent.':'Member checked the box.');}
+}
+
+/* -------- events -------- */
+document.getElementById('screen').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act],[data-ans],[data-pick]');if(!b||b.disabled)return;
+  if(b.dataset.ans){tap();S.A[b.dataset.ans]=b.dataset.val;render();setTimeout(next,180);return;}
+  if(b.dataset.pick){tap();S.A[b.dataset.pick]=b.dataset.val;render();return;}
+  const a=b.dataset.act;
+  if(a==='start'){tap();next();}
+  else if(a==='upload'){tap();S.doc=true;buildScreensKeep();next();}
+  else if(a==='nodoc'){tap();S.screens[S.step]='car';render();}
+  else if(a==='carNext'){tap();enterReview();}
+  else if(a==='next'){tap();next();}
+  else if(a==='garNext'){const v=document.getElementById('garIn').value.trim();if(!v)return;tap();S.A.garaging_address=v;next();}
+  else if(a==='consentBtn'){tap();S.consent=true;S._consentTouched=true;next();}
+  else if(a==='consentNext'){tap();S.consent=true;next();}
+  else if(a==='pay'){tap();S.paid=true;showPaid();render();}
+});
+document.getElementById('screen').addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='cYear'||t.id==='cMake'||t.id==='cModel'){
+    tap();
+    if(t.id==='cYear')S.A.year=t.value;
+    if(t.id==='cMake'){S.A.make=t.value;S.A.model='';delete S.A.submodel;delete S.D.submodel;}
+    if(t.id==='cModel'){S.A.model=t.value;delete S.A.submodel;delete S.D.submodel;}
+    render();return;
+  }
+  if(t.dataset.edit){tap();S.A[t.dataset.edit]=t.value;render();return;}
+  if(t.dataset.cc){tap();S._consentTouched=true;S.consentChecks[t.dataset.cc]=t.checked;render();}
+});
+function enterReview(){
+  if(S.opts.prefill)questionKeys().forEach(k=>{const g=guessOf(k);if(g&&!S.A[k])S.D[k]=g;});
+  next();
+}
+function buildScreensKeep(){const st=S.step;buildScreens();S.step=st;
+  if(S.opts.prefill)questionKeys().forEach(k=>{const g=guessOf(k);if(g&&!S.A[k])S.D[k]=g;});}
+
+function showPaid(){
+  const payload={};FIELDS.forEach(k=>{const r=resolve(k);payload[k]=r.v;});
+  const flags=FIELDS.filter(k=>resolve(k).cls==='s-asm');
+  const c=countFilled();
+  document.getElementById('mSummary').innerHTML=`<b>${P().pay.first}</b> reached the hand-off in <b>${S.taps} taps</b> (~${S.taps*3}s) and saw <b>${memberQuestionCount()}</b> question screens. ${c.by['s-auto']||0} fields were already on file, ${c.by['s-der']||0} estimated by us, ${c.by['s-ans']||0} answered by the member${flags.length?`, <span style="color:var(--amber)"><b>${flags.length} defaulted (${flags.join(', ')})</b></span>`:''}. Consent: ${S.opts.consent==='precheck'&&!S._consentTouched?'<span style="color:var(--red)">pre-checked, weak</span>':'affirmative'}.`;
+  document.getElementById('mPayload').textContent=JSON.stringify({rc1_fields:payload,_assumed_not_attested:flags,_consent_mode:S.opts.consent},null,2);
+  document.getElementById('modal').classList.add('show');
+}
+
+/* -------- autoplay -------- */
+let playing=false;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function play(){
+  if(playing)return;playing=true;
+  reset();await wait(400);
+  const t=P().truth;
+  for(let guard=0;guard<30;guard++){
+    const cur=S.screens[S.step];
+    if(cur==='pay')break;
+    if(cur==='dash'){click('[data-act=start]');}
+    else if(cur==='doc'){click('[data-act=upload]');}
+    else if(cur==='car'){
+      for(const [id,key] of [['cYear','year'],['cMake','make'],['cModel','model']]){const s=document.getElementById(id);s.value=t[key];s.dispatchEvent(new Event('change',{bubbles:true}));await wait(260);}
+      click('[data-act=carNext]');
+    }else if(cur==='review'){
+      for(const s of [...document.querySelectorAll('select[data-edit]')]){const k=s.dataset.edit;if(t[k]&&s.value!==t[k]){s.value=t[k];s.dispatchEvent(new Event('change',{bubbles:true}));await wait(320);}}
+      click('[data-act=next]');
+    }else if(cur.startsWith('q:')){const k=cur.slice(2);click(`[data-ans="${k}"][data-val="${t[k]}"]`);await wait(200);}
+    else if(cur==='garage'){const p=P().pay;document.getElementById('garIn').value=`${p.street}, ${p.city}, ${p.state} ${p.zip}`;click('[data-act=garNext]');}
+    else if(cur==='usage'){click(`[data-pick=primary_use][data-val="${useEst()}"]`);await wait(200);click(`[data-pick=annual_mileage][data-val="${nearestMileage()}"]`);await wait(200);click('[data-act=next]');}
+    else if(cur==='consent'){
+      if(S.opts.consent==='button')click('[data-act=consentBtn]');
+      else if(S.opts.consent==='optin'){const c=document.querySelector('[data-cc=share]');c.checked=true;c.dispatchEvent(new Event('change',{bubbles:true}));await wait(250);click('[data-act=consentNext]');}
+      else click('[data-act=consentNext]');
+    }
+    await wait(650);
+  }
+  playing=false;
+}
+function nearestMileage(){const e=mileageEst();return Q.annual_mileage.opts.reduce((a,b)=>Math.abs(b-e)<Math.abs(a-e)?b:a);}
+function click(sel){const b=document.querySelector('#screen '+sel);if(b)b.click();}
+
+/* -------- controls -------- */
+function reset(){S=freshState(S.pid);buildScreens();render();}
+function renderPersonas(){
+  document.getElementById('personas').innerHTML=Object.entries(PERSONAS).map(([id,p])=>`<button class="pbtn ${S.pid===id?'on':''}" data-p="${id}"><b>${p.pay.first} ${p.pay.last}</b>${p.tag}</button>`).join('');
+}
+document.getElementById('personas').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b||playing)return;S.pid=b.dataset.p;renderPersonas();reset();});
+[['optFinch','finch'],['optCommute','commute'],['optDec','dec'],['optPrefill','prefill']].forEach(([id,k])=>{
+  document.getElementById(id).addEventListener('change',e=>{if(playing){e.target.checked=!e.target.checked;return;}S.opts[k]=e.target.checked;reset();});
+});
+document.getElementById('consentSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||playing)return;
+  document.querySelectorAll('#consentSeg button').forEach(x=>x.classList.toggle('on',x===b));S.opts.consent=b.dataset.m;reset();});
+document.getElementById('playBtn').addEventListener('click',play);
+document.getElementById('resetBtn').addEventListener('click',()=>{if(!playing)reset();});
+renderPersonas();reset();
+</script>
+</body>
+</html>
