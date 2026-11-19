@@ -156,7 +156,6 @@ table.cmp td.num{font-weight:800;color:var(--navy);font-size:16px;white-space:no
       <tr><td><code>year</code> <code>make</code> <code>model</code> <code>submodel</code></td><td>My Financial Life · new "My Car" tile</td><td>"What's your car worth?" A car-value check (like KBB) for her net worth. She picks year/make/model/trim because she wants the number.</td><td><span class="t t-ask">Ask in context</span></td></tr>
       <tr><td><code>annual_mileage</code></td><td>My Car tile</td><td>The car-value check asks the odometer reading anyway. Odometer ÷ car age = miles per year, cross-checked against the commute.</td><td><span class="t t-inf">Infer + confirm</span></td></tr>
       <tr><td><code>violations</code></td><td>Zebra card</td><td>The <b>one</b> question that stays. "Any accidents or tickets in the last 3 years?" One tap.</td><td><span class="t t-no">Never assume</span></td></tr>
-      <tr><td><code>new_policy_effective_date</code> (rate-bearing)</td><td>Auto Insurance tile</td><td>"When does it renew?" Then we time the Zebra nudge for 30 days before renewal, when people actually switch.</td><td><span class="t t-ask">Ask in context</span></td></tr>
       <tr><td><code>insured_length</code>, <code>current_carrier</code></td><td>Auto Insurance tile</td><td>"How long have you been with them?" one chip. Carrier name comes free from the tile.</td><td><span class="t t-ask">Ask in context</span></td></tr>
       <tr><td><code>phone</code> (nice-to-have)</td><td>Account activation</td><td>Phone for sign-in security codes. Zebra's prepop already takes phone.</td><td><span class="t t-ask">Ask in context</span></td></tr>
       <tr><td><code>occupation</code> <code>employment</code> (rate-bearing)</td><td>Onboarding S2 (Finch)</td><td>Job title and employment status are in the Finch employment record.</td><td><span class="t t-inf">Infer + confirm</span></td></tr>
@@ -242,7 +241,7 @@ const STAGES=[
 const PIG={
  s9:{gain:['marital_status','residence_ownership','education','credit_score','primary_use'],src:'Onboarding question',note:'Three extra one-tap questions, each with its own planning reason: education (student-loan planning), credit (financial health), how she gets to work (commute budget). That\'s 5 Zebra fields from one screen she\'s already on.'},
  match:{gain:['ownership'],src:'Advisor prep: "car loan"',note:'Before her advisor call: "Which debts should Michael know about?" She taps "Car loan", which tells us the car is financed.'},
- mfl:{gain:['currently_insured','year','make','model','submodel','annual_mileage'],est:['annual_mileage'],src:'My Financial Life',note:'Two tiles do the heavy lifting. Auto Insurance: picking Progressive = insured, plus renewal month and how long. My Car: "What\'s it worth?" She picks year/make/model/trim and the odometer because she wants the value; odometer ÷ age = ~9,500 mi/yr. That\'s 6 fields, and she thinks she\'s checking her net worth.'},
+ mfl:{gain:['currently_insured','year','make','model','submodel','annual_mileage'],est:['annual_mileage'],src:'My Financial Life',note:'Two tiles do the heavy lifting. Auto Insurance: picking Progressive = insured, plus how long she's been with them. My Car: "What\'s it worth?" She picks year/make/model/trim and the odometer because she wants the value; odometer ÷ age = ~9,500 mi/yr. That\'s 6 fields, and she thinks she\'s checking her net worth.'},
  z1:{gain:['violations'],src:'Zebra card',note:'By the time she opens the Zebra card we have 20 of 21. It\'s all pre-filled, with one question: tickets or accidents in the last 3 years. One tap.'},
  z2:{gain:[],note:'Skipped. We already have the car from the My Car tile, so no VIN needed.'},
  last:{gain:[],note:'Skipped. Nothing left to ask.'}
@@ -342,7 +341,7 @@ function pigScreen(id){
     <div class="tiles"><div class="tile"><b>🏦 My Bank</b>Chase</div><div class="tile"><b>📈 My 401(k)</b>Fidelity</div></div>
     <div class="pigbox"><b style="color:var(--navy)">🚗 My Auto Insurance: Progressive</b>${Z}
       ${q('Been with them…',['< 1 yr','1–3 yrs','3–5 yrs','5+ yrs'],'3–5 yrs')}
-      ${q('Renews in…',['Jan','Feb','Mar','…'],'Feb')}<div style="font-size:12px;margin-top:6px;color:var(--muted)">→ insured ✓, carrier ✓, and we nudge her 30 days before renewal</div></div>
+<div style="font-size:12px;margin-top:6px;color:var(--muted)">→ insured ✓, carrier ✓, how long ✓</div></div>
     <div class="pigbox"><b style="color:var(--navy)">🚙 My Car: what's it worth?</b>${Z}
       <div class="r" style="padding:6px 0"><span class="l">Car</span><span class="v">2020 Honda Civic EX</span></div>
       <div class="r" style="padding:6px 0"><span class="l">Odometer</span><span class="typed">52,000</span></div>
