@@ -4891,8 +4891,17 @@ const CARS={Honda:{Civic:{t:['LX','Sport','EX','Touring'],p:25000},Accord:{t:['L
  Ford:{'F-150':{t:['XL','XLT','Lariat','Platinum'],p:42000},Escape:{t:['S','SE','SEL','Titanium'],p:28000}},
  Nissan:{Altima:{t:['2.5 S','2.5 SV','2.5 SR','2.5 SL'],p:26000}},Tesla:{'Model 3':{t:['Standard','Long Range','Performance'],p:42000}},
  Subaru:{Outback:{t:['Base','Premium','Limited','Touring'],p:31000}},Hyundai:{Tucson:{t:['SE','SEL','N Line','Limited'],p:28000}}};
-function zlCarValue(c){const m=CARS[c.make][c.model];const base=m.p*(1+m.t.indexOf(c.trim)*0.07);const age=Math.max(0.5,2026.9-c.year);
- const extra=(c.odo-12000*age)*0.06;return Math.max(1500,Math.round((base*0.82*Math.pow(0.94,Math.max(0,age-1))-extra)/100)*100);}
+/* Free ballpark, no paid data: approx. original sticker price (p, base trim; +7% per trim step)
+   x average depreciation anchored to two published figures:
+     Carfax: ~20% lost in year 1  -> 80% retained at age 1
+     iSeeCars 2026 study (950K+ five-year-old cars): 41.8% lost over 5 years -> 58.2% retained at age 5
+   Ages 1-5 interpolate geometrically (~7.7%/yr); past 5 we keep that same yearly rate (our assumption).
+   Mileage: +/-5% per 10,000 miles vs. 12,000/yr, capped at +/-20% (our assumption). */
+const ZL_DEP_Y1 = 0.80, ZL_DEP_Y5 = 0.582, ZL_DEP_R = Math.pow(ZL_DEP_Y5 / ZL_DEP_Y1, 1/4);
+function zlRetained(age){ return age <= 1 ? 1 - (1 - ZL_DEP_Y1) * age : ZL_DEP_Y1 * Math.pow(ZL_DEP_R, age - 1); }
+function zlCarValue(c){const m=CARS[c.make][c.model];const base=m.p*(1+Math.max(0,m.t.indexOf(c.trim))*0.07);const age=Math.max(0.25,2026.9-c.year);
+ const adj=Math.max(-0.2,Math.min(0.2,-((c.odo-12000*age)/10000)*0.05));
+ return Math.max(1500,Math.round(base*zlRetained(age)*(1+adj)/100)*100);}
 function zlOpt(sel, arr, v){ sel.innerHTML = arr.map(x => '<option' + (String(x) === String(v) ? ' selected' : '') + '>' + x + '</option>').join(''); }
 function zlFillModels(){ zlOpt(zlModel, Object.keys(CARS[zlMake.value])); zlFillTrims(); }
 function zlFillTrims(){ zlOpt(zlTrim, CARS[zlMake.value][zlModel.value].t); }
@@ -4909,7 +4918,8 @@ function zlCalcCar(){
   c.value = zlCarValue(c); c.miles = Math.round(c.odo / Math.max(0.5, 2026.9 - c.year) / 500) * 500;
   window.__zlPending = c;
   zlVal.innerHTML = '<div style="font-size:12px;color:var(--yellow-dark);font-weight:600">Estimated value</div><div style="font-size:34px;font-weight:800">$' + c.value.toLocaleString() + '</div>' +
-    '<div style="font-size:11px;color:var(--muted)">Illustrative estimate · ' + c.year + ' ' + c.make + ' ' + c.model + ' ' + c.trim + '</div>' +
+    '<div style="font-size:11px;color:var(--muted)">' + c.year + ' ' + c.make + ' ' + c.model + ' ' + c.trim + ' · ' + c.odo.toLocaleString() + ' miles</div>' +
+    '<div style="font-size:10.5px;color:var(--muted);line-height:1.4;margin-top:6px">Ballpark estimate, not an appraisal. Based on the approximate original sticker price and average depreciation (Carfax: about 20% in year one; iSeeCars 2026 study: 41.8% over five years), adjusted for mileage. Condition, options and your local market can move the real number.</div>' +
     '<button class="btn" onclick="zlSaveCar()">Add to My Financial Life</button>';
   zlVal.style.display = 'block';
 }
@@ -5018,7 +5028,7 @@ showDemoBoundary = function(){
   const got = F.filter(f => f[1]).length, miss = F.filter(f => !f[1]).map(f => f[0]);
   document.getElementById('nudgeSuccess').insertAdjacentHTML('beforeend',
     '<div class="zl-comp"><b>💰 Internal only, not shown to members <span class="zn">NEW</span></b><br>' +
-    (got === 21 ? '<b>Compensation point reached: 21 / 21 required fields handed to The Zebra.</b>' : '<b>' + got + ' / 21 fields.</b> Still missing: ' + miss.join(', ') + (miss.length === 1 && miss[0] === 'submodel' ? ' (comes from the VIN, or Zebra asks it)' : '')) +
+    (got === 21 ? '<b>Compensation point reached: 21 / 21 required fields handed to The Zebra.</b>' : '<b>' + got + ' / 21 fields.</b> Still missing: ' + miss.join(', ') + (miss.length === 1 && miss[0] === 'submodel' ? ' (the trim: comes from the My Car tile, or ask it on the confirm sheet)' : '')) +
     '</div>');
 };
 
