@@ -227,12 +227,12 @@ const PERSONAS = [
   },
   {
     id: 'marcus', name: 'Marcus Reed', blurb: '44 · Columbus, OH · homeowner · hybrid · skipped the extras',
-    range: '$1,050 – $1,480 / yr', basis: '<b>Age 44</b> · <b>Columbus, OH 43221</b> · <b>Married</b> · <b>Homeowner</b>',
+    range: '$1,050 – $1,480 / yr', basis: '<b>Age 44</b> · <b>Columbus, OH 43221</b> · <b>Homeowner</b>',
     v: {
       name:      { val: 'Marcus Reed', src: 'finch' },
       dob:       { val: '1982-08-02', src: 'finch' },
       gender:    { val: 'Male', src: 'finch' },
-      marital:   { val: 'Married', src: 'finch', why: 'Spouse is enrolled on his medical plan (benefits data via Finch).' },
+      marital:   { val: null, src: 'ask' },
       education: { val: 'Some college', src: 'guess', why: 'Job title "Operations Manager". Weak signal, so it\'s highlighted for him to check.' },
       email:     { val: 'marcus.reed@example.com', src: 'finch' },
       home:      { val: '2280 Tremont Rd, Upper Arlington, OH 43221', src: 'finch' },
