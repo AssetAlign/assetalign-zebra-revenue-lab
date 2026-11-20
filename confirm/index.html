@@ -42,6 +42,7 @@ h2{font-size:21px;color:var(--navy);line-height:1.2;margin-bottom:6px}
 .ghost{display:block;width:100%;background:none;border:none;color:var(--muted);font-size:13.5px;margin-top:8px;padding:6px}
 .l1note{font-size:12.5px;color:var(--muted);margin-top:14px;background:var(--bg);border-radius:10px;padding:10px 12px}
 /* confirm sheet */
+.pricebar{background:var(--navy);color:#fff;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:13px}.pricebar b{color:var(--yellow);font-size:17px}
 .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:10px}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:0}
 .grp{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
@@ -129,7 +130,7 @@ body.internal .why{display:block}
       <div class="sub">Based on what you've told us so far.</div>
       <div class="hook">
         <div style="font-size:13px;color:rgba(255,255,255,.8)">Drivers like you typically pay</div>
-        <div class="range" id="l1Range"></div>
+        <div class="range" id="l1Range"></div><div id="l1House" style="font-size:13.5px;color:#fff;margin:2px 0 6px"></div>
         <div class="basis" id="l1Basis"></div>
       </div>
       <button class="cta" onclick="toConfirm()">See my exact price →</button>
@@ -141,6 +142,7 @@ body.internal .why{display:block}
       <div class="eyebrow">Step 2 · Your exact price</div>
       <h2>We filled this in for you</h2>
       <div class="sub" id="confirmSub"></div>
+      <div class="pricebar" id="priceBar"></div>
       <div class="legend">
         <span><i class="d-finch"></i>From payroll</span>
         <span><i class="d-onb"></i>You told us</span>
@@ -205,7 +207,7 @@ const YEARS = Array.from({length: 16}, (_, i) => String(2026 - i));
 const PERSONAS = [
   {
     id: 'maya', name: 'Maya Chen', blurb: '29 · Austin, TX · renter · on-site commuter · added her car on the dashboard',
-    range: '$1,320 – $1,860 / yr', basis: '<b>Age 29</b> · <b>Austin, TX 78704</b> · <b>Single</b> · <b>Insured now</b> · <b>2020 vehicle</b> · <b>Financed</b>',
+    range: [110, 155], basis: '<b>Age 29</b> · <b>Austin, TX 78704</b> · <b>Single</b> · <b>Insured now</b> · <b>2020 vehicle</b> · <b>Financed</b>',
     v: {
       name:      { val: 'Maya Chen', src: 'finch' },
       dob:       { val: '1997-03-14', src: 'finch' },
@@ -227,7 +229,7 @@ const PERSONAS = [
   },
   {
     id: 'marcus', name: 'Marcus Reed', blurb: '44 · Columbus, OH · homeowner · hybrid · skipped the extras',
-    range: '$1,050 – $1,480 / yr', basis: '<b>Age 44</b> · <b>Columbus, OH 43221</b> · <b>Homeowner</b>',
+    range: [88, 123], basis: '<b>Age 44</b> · <b>Columbus, OH 43221</b> · <b>Homeowner</b>',
     v: {
       name:      { val: 'Marcus Reed', src: 'finch' },
       dob:       { val: '1982-08-02', src: 'finch' },
@@ -249,7 +251,7 @@ const PERSONAS = [
   },
   {
     id: 'linda', name: 'Linda Ortiz', blurb: '58 · Worcester, MA · homeowner · works remote · leases her car',
-    range: '$980 – $1,390 / yr', basis: '<b>Age 58</b> · <b>Worcester, MA 01609</b> · <b>Married</b> · <b>Insured now</b> · <b>2023 vehicle</b>',
+    range: [82, 116], basis: '<b>Age 58</b> · <b>Worcester, MA 01609</b> · <b>Married</b> · <b>Insured now</b> · <b>2023 vehicle</b>',
     v: {
       name:      { val: 'Linda Ortiz', src: 'finch' },
       dob:       { val: '1968-05-21', src: 'finch' },
@@ -312,10 +314,26 @@ function pickPersona(id) {
   openRow = null; taps = 0; sent = false;
   document.querySelectorAll('.persona').forEach(b => b.classList.toggle('on', b.dataset.id === id));
   document.getElementById('hello').textContent = 'Hi, ' + P.name.split(' ')[0];
-  document.getElementById('l1Range').textContent = P.range;
+  paintPrice();
   document.getElementById('l1Basis').innerHTML = 'Based on ' + P.basis;
   show('scrL1');
   renderAll();
+}
+// Monthly, per car. A married household is priced as 2 cars, less a typical multi-car discount (~15%).
+const MULTICAR = 0.85;
+const money = n => '$' + Math.round(n).toLocaleString();
+function priceParts() {
+  const [lo, hi] = P.range;
+  const married = state && state.marital && state.marital.val === 'Married';
+  return { one: money(lo) + ' – ' + money(hi) + ' / mo',
+           two: married ? money(lo * 2 * MULTICAR) + ' – ' + money(hi * 2 * MULTICAR) + ' / mo' : null };
+}
+function paintPrice() {
+  const p = priceParts();
+  document.getElementById('l1Range').textContent = p.one;
+  document.getElementById('l1House').innerHTML = p.two ? 'You + your spouse (2 cars): <b style="color:var(--yellow)">' + p.two + '</b><br><span style="font-size:11.5px;color:rgba(255,255,255,.65)">Includes a typical multi-car discount.</span>' : '';
+  const pb = document.getElementById('priceBar');
+  if (pb) pb.innerHTML = 'Your estimate: <b>' + p.one + '</b> per car' + (p.two ? '<br>You + your spouse (2 cars): <b>' + p.two + '</b>' : '') + '<br><span style="opacity:.7">Confirm below to get your exact price.</span>';
 }
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); }
 function toConfirm() { tap(); t0 = Date.now(); show('scrConfirm'); renderAll(); document.querySelector('.phone').scrollIntoView({ block: 'start', behavior: 'smooth' }); }
@@ -459,7 +477,7 @@ function renderPanel() {
   document.getElementById('mList').innerHTML = f.map(x =>
     `<div><span class="dot d-${x.src === 'na' ? 'finch' : x.src}"></span><code>${x.key}</code><em>${x.v == null ? '—' : esc(x.v)}</em></div>`).join('');
 }
-function renderAll() { renderRows(); renderPanel(); }
+function renderAll() { renderRows(); renderPanel(); paintPrice(); }
 
 // ---------- Init ----------
 document.getElementById('personaList').innerHTML = PERSONAS.map(p =>
