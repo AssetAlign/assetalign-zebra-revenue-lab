@@ -292,7 +292,7 @@ const ROWS = [
   { g: 'Your car', k: 'use', label: 'Mostly used for', keys: ['primary_use'], opts: ['Commute to work', 'Personal / errands', 'Business'] },
   { g: 'Your car', k: 'miles', label: 'Miles per year', keys: ['annual_mileage'], opts: ['Under 7,500', '7,500 – 9,000', '9,000 – 12,000', '12,000 – 15,000', '15,000+'] }
 ];
-const SRC_LABEL = { finch: 'From payroll', onb: 'You told us', dash: 'My Financial Life', guess: 'Our best guess', ask: 'Needed', edited: 'You updated', na: 'Not needed' };
+const SRC_LABEL = { finch: 'From payroll', onb: 'You told us', dash: 'My Financial Life', guess: 'Our best guess', ask: 'Zebra can ask', edited: 'You updated', na: 'Not needed' };
 
 let P, state, openRow = null, taps = 0, t0 = 0, sent = false;
 
@@ -343,7 +343,7 @@ function renderRows() {
   const guesses = ROWS.filter(r => state[r.k].src === 'guess').length;
   const asks = ROWS.filter(r => state[r.k].val == null).length;
   document.getElementById('confirmSub').innerHTML = asks
-    ? `Answer the <b>${asks}</b> outlined below, then give the highlighted guesses a quick look. Tap anything that's wrong.`
+    ? `Give the <b>${guesses}</b> highlighted guesses a quick look. Anything outlined is optional here: The Zebra will ask you for it.`
     : `Give the <b>${guesses}</b> highlighted guesses a quick look. Tap anything that's wrong.`;
   let html = '', g = '';
   ROWS.forEach(r => {
@@ -355,7 +355,7 @@ function renderRows() {
     html += `<div class="row ${cls} ${openRow === r.k ? 'open' : ''}" data-k="${r.k}">
       <button class="rh" onclick="toggleRow('${r.k}')">
         <span class="dot d-${dotSrc}"></span>
-        <span><span class="l">${r.label}</span><span class="v ${missing ? 'empty' : ''}">${missing ? 'Tap to add' : esc(display(r))}</span></span>
+        <span><span class="l">${r.label}</span><span class="v ${missing ? 'empty' : ''}">${missing ? 'Optional: add it here, or The Zebra asks' : esc(display(r))}</span></span>
         <span class="src">${SRC_LABEL[missing ? 'ask' : s.src]}</span>${s.src === 'na' ? '' : '<span class="pen">✎</span>'}
       </button>
       ${s.why ? `<div class="why">Why: ${esc(s.why)}</div>` : ''}
@@ -364,8 +364,8 @@ function renderRows() {
   });
   document.getElementById('rows').innerHTML = html;
   const btn = document.getElementById('sendBtn');
-  btn.disabled = asks > 0;
-  btn.textContent = asks ? `Answer ${asks} more to see your exact price` : 'Looks right — get my exact quotes →';
+  btn.disabled = false;
+  btn.textContent = 'Looks right — get my exact quotes →';
 }
 
 function editor(r) {
@@ -469,10 +469,12 @@ function renderPanel() {
   if (sent) {
     const secs = Math.max(1, Math.round((Date.now() - t0) / 1000));
     comp.className = 'comp yes';
-    comp.innerHTML = `💰 Paid moment reached · 21 / 21 sent<br><span style="font-weight:400;color:var(--text)">${taps} taps from the hook · ${secs}s on the confirm sheet · ${c('guess')} guesses accepted unchanged</span>`;
+    comp.className = n === 21 ? 'comp yes' : 'comp no';
+    const left = f.filter(x => x.v == null).map(x => x.key);
+    comp.innerHTML = (n === 21 ? '💰 Paid moment reached · 21 / 21 sent to The Zebra' : '⏳ Sent ' + n + ' / 21 to The Zebra. Paid once the member answers the last ' + left.length + ' on The Zebra: ' + left.join(', ')) + `<br><span style="font-weight:400;color:var(--text)">${taps} taps from the hook · ${secs}s on the confirm sheet · ${c('guess')} guesses accepted unchanged</span>`;
   } else {
     comp.className = 'comp no';
-    comp.textContent = n < 21 ? `Not yet: ${21 - n} field${21 - n > 1 ? 's' : ''} still need${21 - n > 1 ? '' : 's'} an answer.` : 'All 21 filled. Waiting for the member to tap "Looks right".';
+    comp.textContent = n < 21 ? n + ' / 21 ready. The member can send now; The Zebra asks the other ' + (21 - n) + '. Every one we fill here is one less chance to drop off over there.' : 'All 21 filled. Waiting for the member to tap "Looks right".';
   }
   document.getElementById('mList').innerHTML = f.map(x =>
     `<div><span class="dot d-${x.src === 'na' ? 'finch' : x.src}"></span><code>${x.key}</code><em>${x.v == null ? '—' : esc(x.v)}</em></div>`).join('');
