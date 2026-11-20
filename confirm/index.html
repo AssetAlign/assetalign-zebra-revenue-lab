@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Zebra Confirm Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D3B66;--navy-mid:#164d82;--yellow:#F4D35E;--yellow-bg:#fefae8;--yellow-dark:#c9a227;--text:#1a2d42;--muted:#6b7c93;--border:#e3e7ec;--bg:#f5f6f8;--card:#fff;--green:#2d8a4e;--green-bg:#e8f5ed;--amber:#b7791f;--amber-bg:#fdf3e1;--red:#c53030;--red-bg:#fdecec;--blue:#2b6cb0;--blue-bg:#e8f1fb;--purple:#5a3fb5;--purple-bg:#efeafb}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.45;font-size:15px}
+button{font-family:inherit;cursor:pointer}
+header{background:#fff;border-bottom:3px solid var(--navy);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:18px;color:var(--navy)}.logo span{color:var(--yellow-dark)}
+.tag{font-size:12px;font-weight:700;background:var(--yellow);color:var(--navy);border-radius:999px;padding:3px 10px}
+header a{margin-left:auto;font-size:14px;color:var(--navy);font-weight:600}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px;display:grid;grid-template-columns:minmax(0,1fr) 400px minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}
+.panel h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.persona{display:block;width:100%;text-align:left;border:1.5px solid var(--border);background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.persona b{display:block;color:var(--navy);font-size:15px}.persona small{color:var(--muted);font-size:12.5px}
+.persona.on{border-color:var(--navy);box-shadow:0 0 0 2px var(--navy) inset;background:var(--blue-bg)}
+.how{font-size:13px;color:var(--muted);margin-top:12px;line-height:1.5}
+.how ol{padding-left:18px}.how li{margin-bottom:4px}
+.toggle{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--navy);margin-top:12px;cursor:pointer}
+/* phone */
+.phone{background:#fff;border:1px solid var(--border);border-radius:26px;box-shadow:0 10px 40px rgba(13,59,102,.12);overflow:hidden;min-height:640px;display:flex;flex-direction:column}
+.ptop{background:var(--navy);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.ptop .cr{background:var(--yellow);color:var(--navy);font-weight:700;border-radius:999px;padding:3px 10px;font-size:12px}
+.screen{display:none;padding:18px 16px 20px;flex:1}.screen.on{display:block}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow-dark);margin-bottom:6px}
+h2{font-size:21px;color:var(--navy);line-height:1.2;margin-bottom:6px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.hook{background:var(--navy);color:#fff;border-radius:16px;padding:18px}
+.hook .range{font-size:30px;font-weight:800;color:var(--yellow);margin:6px 0 2px}
+.hook .basis{font-size:12.5px;color:rgba(255,255,255,.7)}
+.hook .basis b{color:#fff;font-weight:600}
+.cta{display:block;width:100%;border:none;background:var(--yellow);color:var(--navy);font-weight:700;font-size:16px;border-radius:12px;padding:14px;margin-top:14px}
+.cta:disabled{background:#e9ecf0;color:#9aa6b4;cursor:not-allowed}
+.ghost{display:block;width:100%;background:none;border:none;color:var(--muted);font-size:13.5px;margin-top:8px;padding:6px}
+.l1note{font-size:12.5px;color:var(--muted);margin-top:14px;background:var(--bg);border-radius:10px;padding:10px 12px}
+/* confirm sheet */
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:0}
+.grp{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.row{border:1px solid var(--border);border-radius:12px;margin-bottom:6px;background:#fff;overflow:hidden}
+.row.guess{background:var(--yellow-bg);border-color:#f1e2a6}
+.row.ask{background:#fff;border:1.5px dashed var(--navy)}
+.row.edited{background:var(--green-bg);border-color:#bfe3cb}
+.rh{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;width:100%;background:none;border:none;text-align:left}
+.rh .l{font-size:12px;color:var(--muted);display:block}
+.rh .v{font-size:14.5px;font-weight:600;color:var(--navy);display:block}
+.rh .v.empty{color:var(--red);font-weight:600}
+.rh .src{margin-left:auto;font-size:11px;font-weight:600;white-space:nowrap;color:var(--muted)}
+.rh .pen{font-size:12px;color:var(--navy-mid);font-weight:700;margin-left:6px}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.d-finch{background:var(--blue)}.d-onb{background:var(--purple)}.d-dash{background:var(--green)}.d-guess{background:var(--yellow-dark)}.d-ask{background:var(--red)}.d-edited{background:var(--green)}
+.why{display:none;font-size:11.5px;color:var(--amber);padding:0 12px 8px 31px;margin-top:-4px}
+body.internal .why{display:block}
+.ed{display:none;padding:2px 12px 12px}
+.row.open .ed{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--border);background:#fff;border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600;color:var(--navy)}
+.chip.sel{background:var(--navy);border-color:var(--navy);color:#fff}
+.ed input,.ed select{width:100%;font-family:inherit;font-size:14.5px;padding:9px 10px;border:1.5px solid var(--border);border-radius:9px;margin-bottom:6px;background:#fff;color:var(--text)}
+.ed .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ed .done{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-weight:600;font-size:13.5px;margin-top:4px}
+.consent{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45}
+.sticky{position:sticky;bottom:0;background:linear-gradient(rgba(255,255,255,0),#fff 22%);padding-top:14px;margin-top:6px}
+/* result */
+.big{font-size:44px;text-align:center;margin:20px 0 6px}
+.center{text-align:center}
+.demo{background:var(--bg);border:1px dashed var(--border);border-radius:12px;padding:12px;font-size:13px;color:var(--muted);margin-top:16px}
+/* right panel */
+.meter{display:flex;align-items:baseline;gap:6px}
+.meter b{font-size:34px;font-weight:800;color:var(--navy)}
+.meter span{color:var(--muted);font-weight:600}
+.bar{height:10px;border-radius:99px;background:var(--bg);overflow:hidden;display:flex;margin:8px 0 10px}
+.bar div{height:100%;transition:width .4s}
+.mix{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px;margin-bottom:12px}
+.mix div{display:flex;align-items:center;gap:6px}
+.mix b{color:var(--navy)}
+.flist{font-size:12.5px;border-top:1px solid var(--border);padding-top:8px;max-height:430px;overflow:auto}
+.flist div{display:flex;gap:8px;padding:3px 0;align-items:center}
+.flist code{font-size:11.5px;color:var(--text);min-width:128px}
+.flist em{font-style:normal;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.comp{border-radius:12px;padding:12px;margin-top:12px;font-size:13.5px}
+.comp.no{background:var(--bg);color:var(--muted)}
+.comp.yes{background:var(--green-bg);color:var(--green);font-weight:600}
+.notes{margin-top:14px;font-size:13px;line-height:1.5}
+.notes h4{font-size:13px;color:var(--navy);margin:10px 0 4px}
+.notes ul{padding-left:18px}.notes li{margin-bottom:4px}
+@media (max-width:1060px){.wrap{grid-template-columns:1fr;max-width:460px}.phone{order:-1}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#f5f6f8}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Asset<span>Align</span></div>
+  <span class="tag">Zebra lab · Level 2 confirm</span>
+  <a href="../">← Back to the analysis</a>
+</header>
+
+<div class="wrap">
+  <!-- LEFT: personas -->
+  <div class="panel">
+    <h3>Pick a persona</h3>
+    <div id="personaList"></div>
+    <label class="toggle"><input type="checkbox" id="internalToggle"> Show why we guessed each value</label>
+    <div class="how">
+      <b style="color:var(--navy)">How it works</b>
+      <ol>
+        <li><b>Level 1 (hook):</b> a price range from what we already have. Not paid.</li>
+        <li><b>Confirm sheet:</b> all 21 Zebra fields filled in from payroll, onboarding, the dashboard, or our best guess. The member only fixes what's wrong.</li>
+        <li><b>"Looks right":</b> one deliberate tap that sends to The Zebra. That's the paid moment.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- CENTER: the member's phone -->
+  <div class="phone">
+    <div class="ptop"><span id="hello">Hi</span><span class="cr">⬡ 25 credits</span></div>
+
+    <div class="screen on" id="scrL1">
+      <div class="eyebrow">Car insurance check-up</div>
+      <h2>Are you overpaying for car insurance?</h2>
+      <div class="sub">Based on what you've told us so far.</div>
+      <div class="hook">
+        <div style="font-size:13px;color:rgba(255,255,255,.8)">Drivers like you typically pay</div>
+        <div class="range" id="l1Range"></div>
+        <div class="basis" id="l1Basis"></div>
+      </div>
+      <button class="cta" onclick="toConfirm()">See my exact price →</button>
+      <button class="ghost" onclick="tap()">Not right now</button>
+      <div class="l1note"><b>Level 1</b> is a predictive range only. Nothing is sent to The Zebra and there's no payout yet.</div>
+    </div>
+
+    <div class="screen" id="scrConfirm">
+      <div class="eyebrow">Step 2 · Your exact price</div>
+      <h2>We filled this in for you</h2>
+      <div class="sub" id="confirmSub"></div>
+      <div class="legend">
+        <span><i class="d-finch"></i>From payroll</span>
+        <span><i class="d-onb"></i>You told us</span>
+        <span><i class="d-dash"></i>My Financial Life</span>
+        <span><i class="d-guess"></i>Our best guess</span>
+      </div>
+      <div id="rows"></div>
+      <div class="sticky">
+        <button class="cta" id="sendBtn" onclick="submitQuote()"></button>
+        <div class="consent">By tapping, you agree to send these details to The Zebra so it can get your quotes. AssetAlign may be paid by The Zebra when you request a quote. You can change anything above first.</div>
+      </div>
+    </div>
+
+    <div class="screen" id="scrDone">
+      <div class="big">✅</div>
+      <h2 class="center">Your exact quotes are on the way</h2>
+      <div class="sub center">The Zebra is comparing rates for your <b id="doneCar"></b>.</div>
+      <div class="cta" style="text-align:center">+10 credits for checking your rate</div>
+      <div class="demo">Demo boundary: in production, this is where The Zebra's quote results open. Nothing is actually sent from this page.</div>
+      <button class="ghost" onclick="restart()">↺ Run it again</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: internal scoreboard -->
+  <div class="panel">
+    <h3>Internal · Zebra's 21 fields</h3>
+    <div class="meter"><b id="mCount">0</b><span>/ 21 filled</span></div>
+    <div class="bar" id="mBar"></div>
+    <div class="mix" id="mMix"></div>
+    <div id="mComp" class="comp no"></div>
+    <div class="flist" id="mList"></div>
+    <div class="notes">
+      <h4>Rules this design follows</h4>
+      <ul>
+        <li><b>The "no reply means yes" part covers the values only.</b> The member corrects, or doesn't. Sending their data to The Zebra is still one deliberate tap, with the disclosure right under it.</li>
+        <li>Every guess is labeled as a guess on screen, not hidden.</li>
+        <li>We ask outright only when we can't make a sensible guess: the car, and credit where it counts.</li>
+      </ul>
+      <h4>Questions for Fritz</h4>
+      <ul>
+        <li>Does a quote request with guessed-but-unchanged values (violations, mileage, education) count as the paid event?</li>
+        <li>Does Zebra want a flag on which fields were inferred versus member-stated?</li>
+        <li>Is "garaged at home address" an acceptable default?</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- Car data for the vehicle editor (illustrative subset) ----------
+const CARS = {
+  Honda: { Civic: ['LX','Sport','EX','Touring'], Accord: ['LX','Sport','EX-L','Touring'], 'CR-V': ['LX','EX','EX-L','Touring'] },
+  Toyota: { Camry: ['LE','SE','XLE','XSE'], Corolla: ['L','LE','SE','XSE'], RAV4: ['LE','XLE','XLE Premium','Limited'] },
+  Ford: { 'F-150': ['XL','XLT','Lariat','Platinum'], Escape: ['S','SE','SEL','Titanium'], Explorer: ['Base','XLT','Limited','ST'] },
+  Chevrolet: { Equinox: ['LS','LT','RS','Premier'], Silverado: ['WT','LT','RST','LTZ'], Malibu: ['LS','RS','LT','Premier'] },
+  Subaru: { Outback: ['Base','Premium','Limited','Touring'], Forester: ['Base','Premium','Sport','Limited'] }
+};
+const YEARS = Array.from({length: 16}, (_, i) => String(2026 - i));
+
+// ---------- Personas ----------
+// src: finch = payroll/HRIS via Finch · onb = asked in onboarding · dash = dashboard tile · guess = persona inference · ask = must ask
+const PERSONAS = [
+  {
+    id: 'maya', name: 'Maya Chen', blurb: '29 · Austin, TX · renter · on-site commuter · added her car on the dashboard',
+    range: '$1,320 – $1,860 / yr', basis: '<b>Age 29</b> · <b>Austin, TX 78704</b> · <b>Single</b> · <b>Insured now</b> · <b>2020 vehicle</b> · <b>Financed</b>',
+    v: {
+      name:      { val: 'Maya Chen', src: 'finch' },
+      dob:       { val: '1997-03-14', src: 'finch' },
+      gender:    { val: 'Female', src: 'finch' },
+      marital:   { val: 'Single', src: 'onb' },
+      education: { val: "Bachelor's degree", src: 'guess', why: 'Job title on payroll is "Financial Analyst", a role that almost always requires a 4-year degree.' },
+      email:     { val: 'maya.chen@example.com', src: 'finch' },
+      home:      { val: '1402 S Congress Ave, Austin, TX 78704', src: 'finch' },
+      garage:    { val: 'Same as home address', src: 'guess', why: 'Default: most people park at home. Only matters if it differs.' },
+      residence: { val: 'Rent', src: 'onb' },
+      insured:   { val: 'Yes · GEICO · 3–5 years', src: 'dash' },
+      violations:{ val: 'None in the last 3 years', src: 'guess', why: 'Default: most drivers have a clean 3-year record. The member is asked to change it if not.' },
+      credit:    { val: 'Good (670–739)', src: 'onb' },
+      car:       { val: { year: '2020', make: 'Honda', model: 'Civic', trim: 'EX' }, src: 'dash' },
+      ownership: { val: 'Financed', src: 'onb', why: 'She ticked "Car loan" in the onboarding debts question.' },
+      use:       { val: 'Commute to work', src: 'guess', why: 'Payroll lists an on-site work location (2100 E St Elmo Rd).' },
+      miles:     { val: '9,000 – 12,000', src: 'guess', why: '~6 mi each way to the worksite × ~240 workdays ≈ 2,900 mi, plus typical personal driving.' }
+    }
+  },
+  {
+    id: 'marcus', name: 'Marcus Reed', blurb: '44 · Columbus, OH · homeowner · hybrid · skipped the extras',
+    range: '$1,050 – $1,480 / yr', basis: '<b>Age 44</b> · <b>Columbus, OH 43221</b> · <b>Married</b> · <b>Homeowner</b>',
+    v: {
+      name:      { val: 'Marcus Reed', src: 'finch' },
+      dob:       { val: '1982-08-02', src: 'finch' },
+      gender:    { val: 'Male', src: 'finch' },
+      marital:   { val: 'Married', src: 'finch', why: 'Spouse is enrolled on his medical plan (benefits data via Finch).' },
+      education: { val: 'Some college', src: 'guess', why: 'Job title "Operations Manager". Weak signal, so it\'s highlighted for him to check.' },
+      email:     { val: 'marcus.reed@example.com', src: 'finch' },
+      home:      { val: '2280 Tremont Rd, Upper Arlington, OH 43221', src: 'finch' },
+      garage:    { val: 'Same as home address', src: 'guess', why: 'Default: most people park at home.' },
+      residence: { val: 'Own', src: 'onb' },
+      insured:   { val: 'Yes', src: 'guess', why: 'Ohio requires insurance and he hasn\'t said otherwise. Carrier unknown; not one of the 21 fields.' },
+      violations:{ val: 'None in the last 3 years', src: 'guess', why: 'Default clean record.' },
+      credit:    { val: null, src: 'ask' },
+      car:       { val: null, src: 'ask' },
+      ownership: { val: 'Owned (paid off)', src: 'guess', why: 'He skipped the debts question. No car loan seen, so we assume it\'s paid off.' },
+      use:       { val: 'Commute to work', src: 'guess', why: 'Payroll lists a hybrid schedule at a Columbus office.' },
+      miles:     { val: '9,000 – 12,000', src: 'guess', why: '~14 mi each way × ~3 days/week, plus typical family driving.' }
+    }
+  },
+  {
+    id: 'linda', name: 'Linda Ortiz', blurb: '58 · Worcester, MA · homeowner · works remote · leases her car',
+    range: '$980 – $1,390 / yr', basis: '<b>Age 58</b> · <b>Worcester, MA 01609</b> · <b>Married</b> · <b>Insured now</b> · <b>2023 vehicle</b>',
+    v: {
+      name:      { val: 'Linda Ortiz', src: 'finch' },
+      dob:       { val: '1968-05-21', src: 'finch' },
+      gender:    { val: 'Female', src: 'finch' },
+      marital:   { val: 'Married', src: 'onb' },
+      education: { val: "Bachelor's degree", src: 'onb' },
+      email:     { val: 'linda.ortiz@example.com', src: 'finch' },
+      home:      { val: '41 Salisbury St, Worcester, MA 01609', src: 'finch' },
+      garage:    { val: 'Same as home address', src: 'guess', why: 'Default: most people park at home.' },
+      residence: { val: 'Own', src: 'onb' },
+      insured:   { val: 'Yes · Progressive · 5+ years', src: 'dash' },
+      violations:{ val: 'None in the last 3 years', src: 'guess', why: 'Default clean record.' },
+      credit:    { val: 'Not used in Massachusetts', src: 'na' },
+      car:       { val: { year: '2023', make: 'Toyota', model: 'RAV4', trim: 'XLE' }, src: 'dash' },
+      ownership: { val: 'Leased', src: 'onb', why: 'She ticked "Car lease" in the onboarding debts question.' },
+      use:       { val: 'Personal / errands', src: 'guess', why: 'Payroll lists her as fully remote, so no commute.' },
+      miles:     { val: 'Under 7,500', src: 'guess', why: 'Remote worker: no commute miles.' }
+    }
+  }
+];
+
+// ---------- Rows on the confirm sheet → Zebra field keys ----------
+const ROWS = [
+  { g: 'About you', k: 'name', label: 'Name', keys: ['first_name', 'last_name'], type: 'text' },
+  { g: 'About you', k: 'dob', label: 'Date of birth', keys: ['date_of_birth'], type: 'date' },
+  { g: 'About you', k: 'gender', label: 'Gender (as on your license)', keys: ['gender'], opts: ['Female', 'Male', 'Non-binary'] },
+  { g: 'About you', k: 'marital', label: 'Marital status', keys: ['marital_status'], opts: ['Single', 'Married', 'Divorced', 'Widowed'] },
+  { g: 'About you', k: 'education', label: 'Highest education', keys: ['education'], opts: ['High school', 'Some college', "Associate's degree", "Bachelor's degree", "Master's or higher"] },
+  { g: 'About you', k: 'email', label: 'Email for your quotes', keys: ['email'], type: 'text' },
+  { g: 'Where you live', k: 'home', label: 'Home address', keys: ['state', 'zipcode'], type: 'text' },
+  { g: 'Where you live', k: 'garage', label: 'Where the car is parked overnight', keys: ['garaging_address'], type: 'text', opts: ['Same as home address'] },
+  { g: 'Where you live', k: 'residence', label: 'Do you own or rent?', keys: ['residence_ownership'], opts: ['Own', 'Rent', 'Live with family'] },
+  { g: 'Your driving', k: 'insured', label: 'Insured right now?', keys: ['currently_insured'], opts: ['Yes', 'No'] },
+  { g: 'Your driving', k: 'violations', label: 'Tickets or accidents (3 years)', keys: ['violations'], opts: ['None in the last 3 years', '1 ticket', '1 accident', '2 or more'] },
+  { g: 'Your driving', k: 'credit', label: 'Your credit, roughly', keys: ['credit_score'], opts: ['Excellent (740+)', 'Good (670–739)', 'Fair (580–669)', 'Poor (under 580)'] },
+  { g: 'Your car', k: 'car', label: 'Vehicle', keys: ['year', 'make', 'model', 'submodel'], type: 'car' },
+  { g: 'Your car', k: 'ownership', label: 'Own, financed or leased?', keys: ['ownership'], opts: ['Owned (paid off)', 'Financed', 'Leased'] },
+  { g: 'Your car', k: 'use', label: 'Mostly used for', keys: ['primary_use'], opts: ['Commute to work', 'Personal / errands', 'Business'] },
+  { g: 'Your car', k: 'miles', label: 'Miles per year', keys: ['annual_mileage'], opts: ['Under 7,500', '7,500 – 9,000', '9,000 – 12,000', '12,000 – 15,000', '15,000+'] }
+];
+const SRC_LABEL = { finch: 'From payroll', onb: 'You told us', dash: 'My Financial Life', guess: 'Our best guess', ask: 'Needed', edited: 'You updated', na: 'Not needed' };
+
+let P, state, openRow = null, taps = 0, t0 = 0, sent = false;
+
+function tap() { taps++; }
+function fmtDob(d) { const [y, m, dd] = d.split('-'); return `${+m}/${+dd}/${y}`; }
+function carText(c) { return c ? `${c.year} ${c.make} ${c.model} ${c.trim}` : ''; }
+function display(r) {
+  const s = state[r.k];
+  if (s.val == null) return '';
+  if (r.type === 'date') return fmtDob(s.val);
+  if (r.type === 'car') return carText(s.val);
+  return s.val;
+}
+function esc(t) { return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+function pickPersona(id) {
+  P = PERSONAS.find(p => p.id === id);
+  state = JSON.parse(JSON.stringify(P.v));
+  openRow = null; taps = 0; sent = false;
+  document.querySelectorAll('.persona').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+  document.getElementById('hello').textContent = 'Hi, ' + P.name.split(' ')[0];
+  document.getElementById('l1Range').textContent = P.range;
+  document.getElementById('l1Basis').innerHTML = 'Based on ' + P.basis;
+  show('scrL1');
+  renderAll();
+}
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); }
+function toConfirm() { tap(); t0 = Date.now(); show('scrConfirm'); renderAll(); document.querySelector('.phone').scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+function restart() { pickPersona(P.id); }
+
+function renderRows() {
+  const guesses = ROWS.filter(r => state[r.k].src === 'guess').length;
+  const asks = ROWS.filter(r => state[r.k].val == null).length;
+  document.getElementById('confirmSub').innerHTML = asks
+    ? `Answer the <b>${asks}</b> outlined below, then give the highlighted guesses a quick look. Tap anything that's wrong.`
+    : `Give the <b>${guesses}</b> highlighted guesses a quick look. Tap anything that's wrong.`;
+  let html = '', g = '';
+  ROWS.forEach(r => {
+    const s = state[r.k];
+    if (r.g !== g) { g = r.g; html += `<div class="grp">${g}</div>`; }
+    const missing = s.val == null;
+    const cls = s.src === 'edited' ? 'edited' : missing ? 'ask' : s.src === 'guess' ? 'guess' : '';
+    const dotSrc = missing ? 'ask' : s.src === 'na' ? 'finch' : s.src;
+    html += `<div class="row ${cls} ${openRow === r.k ? 'open' : ''}" data-k="${r.k}">
+      <button class="rh" onclick="toggleRow('${r.k}')">
+        <span class="dot d-${dotSrc}"></span>
+        <span><span class="l">${r.label}</span><span class="v ${missing ? 'empty' : ''}">${missing ? 'Tap to add' : esc(display(r))}</span></span>
+        <span class="src">${SRC_LABEL[missing ? 'ask' : s.src]}</span>${s.src === 'na' ? '' : '<span class="pen">✎</span>'}
+      </button>
+      ${s.why ? `<div class="why">Why: ${esc(s.why)}</div>` : ''}
+      <div class="ed">${openRow === r.k ? editor(r) : ''}</div>
+    </div>`;
+  });
+  document.getElementById('rows').innerHTML = html;
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = asks > 0;
+  btn.textContent = asks ? `Answer ${asks} more to see your exact price` : 'Looks right — get my exact quotes →';
+}
+
+function editor(r) {
+  const s = state[r.k];
+  if (r.type === 'car') {
+    const c = s.val || { year: '', make: '', model: '', trim: '' };
+    const models = c.make ? Object.keys(CARS[c.make]) : [];
+    const trims = c.make && c.model ? CARS[c.make][c.model] : [];
+    const sel = (id, list, cur, ph) => `<select id="${id}" onchange="carChange()"><option value="">${ph}</option>${list.map(x => `<option ${x === cur ? 'selected' : ''}>${x}</option>`).join('')}</select>`;
+    return `<div class="two">${sel('cYear', YEARS, c.year, 'Year')}${sel('cMake', Object.keys(CARS), c.make, 'Make')}</div>
+      <div class="two">${sel('cModel', models, c.model, 'Model')}${sel('cTrim', trims, c.trim, 'Trim')}</div>
+      <button class="done" onclick="saveCar()">Done</button>`;
+  }
+  if (r.opts && r.type !== 'text') {
+    return `<div class="chips">${r.opts.map(o => `<button class="chip ${o === s.val ? 'sel' : ''}" onclick="setVal('${r.k}', this.textContent)">${esc(o)}</button>`).join('')}</div>`;
+  }
+  const v = s.val == null ? '' : s.val;
+  const extra = r.opts ? `<div class="chips" style="margin-bottom:6px">${r.opts.map(o => `<button class="chip ${o === v ? 'sel' : ''}" onclick="setVal('${r.k}', this.textContent)">${esc(o)}</button>`).join('')}</div>` : '';
+  const val = r.k === 'garage' && v === 'Same as home address' ? '' : v;
+  return `${extra}<input id="in_${r.k}" type="${r.type === 'date' ? 'date' : 'text'}" value="${esc(val)}" placeholder="${r.k === 'garage' ? 'Or type a different address' : ''}">
+    <button class="done" onclick="saveText('${r.k}')">Done</button>`;
+}
+
+function toggleRow(k) {
+  if (state[k].src === 'na') return;
+  if (k === 'car') delete state.car._draft;
+  tap(); openRow = openRow === k ? null : k; renderAll();
+}
+function mark(k, val) {
+  const s = state[k];
+  if (val !== s.val || s.val == null) { s.val = val; s.src = 'edited'; delete s.why; }
+  else if (s.src === 'guess') { s.src = 'edited'; s.val = val; delete s.why; } // explicitly re-confirmed a guess
+}
+function setVal(k, v) { tap(); mark(k, v); openRow = null; renderAll(); }
+function saveText(k) {
+  tap();
+  const v = document.getElementById('in_' + k).value.trim();
+  if (v) mark(k, v);
+  openRow = null; renderAll();
+}
+function carChange() {
+  const c = { year: cYear.value, make: cMake.value, model: cModel.value, trim: cTrim.value };
+  const prev = state.car._draft || state.car.val || {};
+  if (c.make !== prev.make) { c.model = ''; c.trim = ''; }
+  else if (c.model !== prev.model) c.trim = '';
+  state.car._draft = c;
+  const r = ROWS.find(x => x.k === 'car');
+  const saved = state.car.val; state.car.val = c;
+  document.querySelector('.row[data-k="car"] .ed').innerHTML = editor(r);
+  state.car.val = saved;
+}
+function saveCar() {
+  tap();
+  const c = { year: cYear.value, make: cMake.value, model: cModel.value, trim: cTrim.value };
+  if (c.year && c.make && c.model && c.trim) {
+    if (JSON.stringify(c) !== JSON.stringify(state.car.val)) { state.car.val = c; state.car.src = 'edited'; }
+    openRow = null;
+  }
+  renderAll();
+}
+
+function submitQuote() {
+  tap(); sent = true;
+  document.getElementById('doneCar').textContent = carText(state.car.val);
+  show('scrDone'); renderPanel();
+}
+
+// ---------- Internal scoreboard ----------
+function fieldValues() {
+  const out = [];
+  ROWS.forEach(r => {
+    const s = state[r.k];
+    r.keys.forEach(key => {
+      let v = null;
+      if (s.val != null) {
+        if (r.k === 'name') v = s.val.split(' ')[key === 'first_name' ? 0 : 1];
+        else if (r.k === 'home') { const m = s.val.match(/,\s*([A-Z]{2})\s+(\d{5})/); v = m ? (key === 'state' ? m[1] : m[2]) : s.val; }
+        else if (r.k === 'car') v = s.val[{ year: 'year', make: 'make', model: 'model', submodel: 'trim' }[key]];
+        else v = display(r);
+      }
+      out.push({ key, v, src: s.val == null ? 'ask' : s.src });
+    });
+  });
+  return out;
+}
+function renderPanel() {
+  const f = fieldValues();
+  const n = f.filter(x => x.v != null).length;
+  const c = k => f.filter(x => x.src === k).length;
+  const known = c('finch') + c('onb') + c('dash') + c('na');
+  document.getElementById('mCount').textContent = n;
+  const w = x => (x / 21 * 100) + '%';
+  document.getElementById('mBar').innerHTML =
+    `<div style="width:${w(known)};background:var(--blue)"></div><div style="width:${w(c('edited'))};background:var(--green)"></div><div style="width:${w(c('guess'))};background:var(--yellow-dark)"></div>`;
+  document.getElementById('mMix').innerHTML = `
+    <div><span class="dot d-finch"></span><b>${known}</b> already known</div>
+    <div><span class="dot d-guess"></span><b>${c('guess')}</b> best guess</div>
+    <div><span class="dot d-edited"></span><b>${c('edited')}</b> member set or fixed</div>
+    <div><span class="dot d-ask"></span><b>${c('ask')}</b> still to ask</div>`;
+  const comp = document.getElementById('mComp');
+  if (sent) {
+    const secs = Math.max(1, Math.round((Date.now() - t0) / 1000));
+    comp.className = 'comp yes';
+    comp.innerHTML = `💰 Paid moment reached · 21 / 21 sent<br><span style="font-weight:400;color:var(--text)">${taps} taps from the hook · ${secs}s on the confirm sheet · ${c('guess')} guesses accepted unchanged</span>`;
+  } else {
+    comp.className = 'comp no';
+    comp.textContent = n < 21 ? `Not yet: ${21 - n} field${21 - n > 1 ? 's' : ''} still need${21 - n > 1 ? '' : 's'} an answer.` : 'All 21 filled. Waiting for the member to tap "Looks right".';
+  }
+  document.getElementById('mList').innerHTML = f.map(x =>
+    `<div><span class="dot d-${x.src === 'na' ? 'finch' : x.src}"></span><code>${x.key}</code><em>${x.v == null ? '—' : esc(x.v)}</em></div>`).join('');
+}
+function renderAll() { renderRows(); renderPanel(); }
+
+// ---------- Init ----------
+document.getElementById('personaList').innerHTML = PERSONAS.map(p =>
+  `<button class="persona" data-id="${p.id}" onclick="pickPersona('${p.id}')"><b>${p.name}</b><small>${p.blurb}</small></button>`).join('');
+document.getElementById('internalToggle').addEventListener('change', e => document.body.classList.toggle('internal', e.target.checked));
+pickPersona('maya');
+</script>
+</body>
+</html>
